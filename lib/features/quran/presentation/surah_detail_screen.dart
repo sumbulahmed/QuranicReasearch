@@ -5,10 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_dimensions.dart';
 import '../../../core/constants/app_typography.dart';
+import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/custom_divider.dart';
 import '../../../core/widgets/evidence_badge.dart';
 import '../../../core/widgets/research_citation_card.dart';
+import '../../../core/widgets/translation_text.dart';
 import '../../../core/providers/app_providers.dart';
 import '../../user_library/domain/entities/bookmark.dart';
 
@@ -34,8 +37,11 @@ class SurahDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         title: surahAsync.when(
           data: (surah) => Text(
-            surah != null ? '${surah.nameEnglish} (${surah.nameArabic})' : 'Surah $surahNumber',
-            style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.w700),
+            surah != null ? '${surah.nameEnglish} • ${surah.nameArabic}' : 'Surah $surahNumber',
+            style: AppTypography.titleMedium.copyWith(
+              fontWeight: FontWeight.w700,
+              color: isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon,
+            ),
           ),
           loading: () => const Text('Loading...'),
           error: (err, stack) => Text('Surah $surahNumber'),
@@ -43,18 +49,20 @@ class SurahDetailScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.format_size_rounded),
+            color: isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon,
             onPressed: () => _showDisplaySettingsSheet(context, ref),
             tooltip: 'Reading Display Settings',
           ),
           IconButton(
             icon: const Icon(Icons.share_outlined),
+            color: isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon,
             onPressed: () {
               Clipboard.setData(ClipboardData(
-                text: 'Reading Surah $surahNumber in Bayan Islamic & Science App.',
+                text: 'Reading Surah $surahNumber in Quranic Research.',
               ));
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Surah link copied to clipboard!'),
+                  content: Text('Surah reference copied to clipboard'),
                   duration: Duration(seconds: 2),
                 ),
               );
@@ -63,45 +71,49 @@ class SurahDetailScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: ayahsAsync.when(
-        data: (ayahs) {
-          final surah = surahAsync.value;
-          return ListView.separated(
-            padding: AppDimensions.paddingScreen,
-            itemCount: ayahs.length + 1, // +1 for Surah header
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return _buildSurahHeader(context, isDark, surah);
-              }
-              final ayah = ayahs[index - 1];
-              final bookmarkId = 'bm_${ayah.surahNumber}_${ayah.ayahNumber}';
-              final isBookmarked = bookmarks.any((b) => b.id == bookmarkId);
+      body: AppBackground(
+        child: ayahsAsync.when(
+          data: (ayahs) {
+            final surah = surahAsync.value;
+            return ListView.separated(
+              padding: AppDimensions.paddingScreen,
+              itemCount: ayahs.length + 1, // +1 for Surah header
+              separatorBuilder: (context, index) => const SizedBox(height: 14),
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return _buildSurahHeader(context, isDark, surah);
+                }
+                final ayah = ayahs[index - 1];
+                final bookmarkId = 'bm_${ayah.surahNumber}_${ayah.ayahNumber}';
+                final isBookmarked = bookmarks.any((b) => b.id == bookmarkId);
 
-              return _buildAyahCard(
-                context,
-                ref,
-                ayah,
-                isDark,
-                arabicFontSize,
-                translationPref,
-                isBookmarked,
-              );
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
+                return _buildAyahCard(
+                  context,
+                  ref,
+                  ayah,
+                  isDark,
+                  arabicFontSize,
+                  translationPref,
+                  isBookmarked,
+                );
+              },
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, _) => Center(child: Text('Error loading Surah: $err')),
+        ),
       ),
     );
   }
 
   void _showDisplaySettingsSheet(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: isDark ? AppColors.darkSurface : AppColors.parchmentCard,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (ctx) {
         return Consumer(
@@ -110,38 +122,45 @@ class SurahDetailScreen extends ConsumerWidget {
             final currentPref = ref.watch(translationPreferenceProvider);
 
             return Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(22),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
                     child: Container(
-                      width: 40,
-                      height: 4,
+                      width: 36,
+                      height: 3.5,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade400,
+                        color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text('Display & Font Settings', style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 16),
-                  Text('Arabic Font Size (${currentSize.toInt()} pt)', style: AppTypography.labelMedium),
+                  Text(
+                    'Manuscript Display Settings',
+                    style: AppTypography.titleMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text('Arabic Calligraphy Size (${currentSize.toInt()} pt)',
+                      style: AppTypography.labelMedium),
                   Slider(
                     value: currentSize,
                     min: 20.0,
                     max: 42.0,
                     divisions: 11,
                     label: '${currentSize.toInt()}',
-                    activeColor: AppColors.primaryEmerald,
+                    activeColor: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
                     onChanged: (val) {
                       ref.read(arabicFontSizeProvider.notifier).state = val;
                     },
                   ),
-                  const SizedBox(height: 12),
-                  Text('Translation Mode', style: AppTypography.labelMedium),
+                  const SizedBox(height: 10),
+                  Text('Translation Display', style: AppTypography.labelMedium),
                   const SizedBox(height: 8),
                   SegmentedButton<String>(
                     segments: const [
@@ -154,7 +173,7 @@ class SurahDetailScreen extends ConsumerWidget {
                       ref.read(translationPreferenceProvider.notifier).state = set.first;
                     },
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
                 ],
               ),
             );
@@ -165,7 +184,6 @@ class SurahDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildSurahHeader(BuildContext context, bool isDark, dynamic surah) {
-    final theme = Theme.of(context);
     final nameArabic = surah?.nameArabic ?? '';
     final nameEnglish = surah?.nameEnglish ?? 'Surah $surahNumber';
     final nameTranslation = surah?.nameTranslation ?? '';
@@ -173,14 +191,26 @@ class SurahDetailScreen extends ConsumerWidget {
     final numberOfAyahs = surah?.numberOfAyahs ?? '';
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceSubtle : AppColors.lightSurfaceSubtle,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+        color: isDark ? AppColors.darkSurface : AppColors.parchmentCard,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          color: isDark
+              ? AppColors.darkBorder
+              : AppColors.accentGold.withValues(alpha: 0.4),
+          width: 1.0,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.25)
+                : const Color(0xFF6B5848).withValues(alpha: 0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -188,17 +218,20 @@ class SurahDetailScreen extends ConsumerWidget {
             Text(
               nameArabic,
               style: AppTypography.quranTextLarge.copyWith(
-                color: AppColors.primaryEmerald,
+                color: isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon,
                 fontSize: 34,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
           ],
           Text(
             nameEnglish,
-            style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700),
+            style: AppTypography.titleLarge.copyWith(
+              fontWeight: FontWeight.w700,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
+            ),
             textAlign: TextAlign.center,
           ),
           if (nameTranslation.isNotEmpty) ...[
@@ -206,40 +239,49 @@ class SurahDetailScreen extends ConsumerWidget {
             Text(
               nameTranslation,
               style: AppTypography.bodySmall.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                fontStyle: FontStyle.italic,
               ),
               textAlign: TextAlign.center,
             ),
           ],
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryEmerald.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
+                  color: isDark ? AppColors.darkSurfaceSubtle : AppColors.parchmentSubtle,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder,
+                    width: 0.8,
+                  ),
                 ),
                 child: Text(
                   revelationType,
                   style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.primaryEmerald,
+                    color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
-                  color: AppColors.accentTeal.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
+                  color: isDark ? AppColors.darkSurfaceSubtle : AppColors.parchmentSubtle,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder,
+                    width: 0.8,
+                  ),
                 ),
                 child: Text(
                   '$numberOfAyahs Verses',
                   style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.accentTeal,
+                    color: isDark ? AppColors.accentGoldLight : AppColors.accentSepia,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -247,22 +289,20 @@ class SurahDetailScreen extends ConsumerWidget {
             ],
           ),
           if (surahNumber != 9) ...[
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 12),
+            const CustomDivider(showOrnament: true, verticalPadding: 12),
             Text(
               'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
               style: AppTypography.quranTextLarge.copyWith(
-                color: AppColors.primaryEmerald,
+                color: isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon,
                 fontSize: 24,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 3),
             Text(
               'In the name of Allah, the Entirely Merciful, the Especially Merciful',
               style: AppTypography.bodySmall.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
                 fontSize: 11,
               ),
               textAlign: TextAlign.center,
@@ -282,64 +322,57 @@ class SurahDetailScreen extends ConsumerWidget {
     String translationPref,
     bool isBookmarked,
   ) {
-    final theme = Theme.of(context);
-
     return AppCard(
-      onTap: () => context.push('/quran/ayah/${ayah.surahNumber}/${ayah.ayahNumber}'),
       padding: AppDimensions.paddingCard,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Ayah Number & Action Bar
+          // 1. AYAH HEADER & ACTION BAR
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryEmerald.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+                  color: isDark ? AppColors.darkSurfaceSubtle : AppColors.parchmentSubtle,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.primaryMaroon.withValues(alpha: 0.25),
+                    width: 0.8,
+                  ),
                 ),
                 child: Text(
                   '$surahNumber:${ayah.ayahNumber}',
                   style: AppTypography.labelMedium.copyWith(
-                    color: AppColors.primaryEmerald,
+                    color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
               Row(
                 children: [
-                  // Play Audio Button
                   IconButton(
-                    icon: const Icon(Icons.play_circle_outline_rounded, size: 20),
+                    icon: Icon(
+                      Icons.play_circle_outline_rounded,
+                      size: 20,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.primaryMaroon,
+                    ),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Row(
-                            children: [
-                              const Icon(Icons.graphic_eq_rounded, color: Colors.white, size: 18),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text('Playing Ayah $surahNumber:${ayah.ayahNumber} (Reciter: Mishary Alafasy)'),
-                              ),
-                            ],
-                          ),
-                          duration: const Duration(seconds: 3),
-                          action: SnackBarAction(
-                            label: 'Stop',
-                            onPressed: () {},
-                          ),
+                          content: Text('Playing Ayah $surahNumber:${ayah.ayahNumber} (Sheikh Mishary Alafasy)'),
+                          duration: const Duration(seconds: 2),
                         ),
                       );
                     },
                     tooltip: 'Play Recitation',
                   ),
-                  // Bookmark Button
                   IconButton(
                     icon: Icon(
                       isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                      color: isBookmarked ? AppColors.accentGold : null,
+                      color: isBookmarked ? AppColors.accentGold : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                       size: 20,
                     ),
                     onPressed: () {
@@ -365,9 +398,12 @@ class SurahDetailScreen extends ConsumerWidget {
                     },
                     tooltip: 'Bookmark Ayah',
                   ),
-                  // Copy Button
                   IconButton(
-                    icon: const Icon(Icons.copy_rounded, size: 18),
+                    icon: Icon(
+                      Icons.copy_rounded,
+                      size: 18,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    ),
                     onPressed: () {
                       final textToCopy = '${ayah.textArabic}\n\n"${ayah.textTranslation}"\n— Qur\'an $surahNumber:${ayah.ayahNumber}';
                       Clipboard.setData(ClipboardData(text: textToCopy));
@@ -380,81 +416,75 @@ class SurahDetailScreen extends ConsumerWidget {
                     },
                     tooltip: 'Copy Ayah',
                   ),
-                  // Ayah Detail Fullpage Arrow
-                  IconButton(
-                    icon: const Icon(Icons.open_in_new_rounded, size: 18),
-                    onPressed: () => context.push('/quran/ayah/${ayah.surahNumber}/${ayah.ayahNumber}'),
-                    tooltip: 'Open Full Ayah Detail & Evidence',
-                  ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
 
-          // Arabic Quranic Text (Scalable with arabicFontSize)
+          // 2. ARABIC TEXT (Amiri calligraphy)
           ArabicText(
             ayah.textArabic,
             fontSize: arabicFontSize,
             fontWeight: FontWeight.w600,
             textAlign: TextAlign.right,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
 
-          // English Translation
+          // 3. TRANSLATION (English & optional Urdu)
           if (translationPref == 'english' || translationPref == 'both') ...[
-            Text(
-              ayah.textTranslation,
-              style: AppTypography.bodyLarge.copyWith(
-                color: theme.colorScheme.onSurface,
-                height: 1.6,
-              ),
-            ),
+            TranslationText(ayah.textTranslation),
           ],
-
-          // Urdu Translation
           if ((translationPref == 'urdu' || translationPref == 'both') && ayah.textTranslationUrdu != null) ...[
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Text(
               ayah.textTranslationUrdu!,
               textDirection: TextDirection.rtl,
-              style: AppTypography.bodyMedium.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
-                height: 1.7,
-                fontSize: 15,
+              style: AppTypography.bodySmall.copyWith(
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                fontSize: 14.5,
               ),
             ),
           ],
 
-          // Classical Tafseer Expandable
+          // 4. CLASSICAL TAFSEER
           if (ayah.tafseer != null) ...[
             const SizedBox(height: 14),
-            Theme(
-              data: theme.copyWith(dividerColor: Colors.transparent),
-              child: ExpansionTile(
-                tilePadding: EdgeInsets.zero,
-                childrenPadding: const EdgeInsets.only(bottom: 8),
-                title: Text(
-                  'Classical Commentary (Tafseer)',
-                  style: AppTypography.labelMedium.copyWith(
-                    color: AppColors.accentTeal,
-                  ),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkSurfaceSubtle : AppColors.parchmentSubtle,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder,
+                  width: 0.8,
                 ),
-                leading: const Icon(Icons.menu_book_rounded, size: 18, color: AppColors.accentTeal),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurfaceSubtle : AppColors.lightSurfaceSubtle,
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                    ),
-                    child: Text(
-                      ayah.tafseer!,
-                      style: AppTypography.bodySmall.copyWith(
-                        height: 1.5,
-                        color: theme.colorScheme.onSurfaceVariant,
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.menu_book_rounded,
+                        size: 15,
+                        color: isDark ? AppColors.accentGoldLight : AppColors.accentSepia,
                       ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Classical Commentary (Tafseer)',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: isDark ? AppColors.accentGoldLight : AppColors.accentSepia,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    ayah.tafseer!,
+                    style: AppTypography.tafseerText.copyWith(
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                     ),
                   ),
                 ],
@@ -462,72 +492,69 @@ class SurahDetailScreen extends ConsumerWidget {
             ),
           ],
 
-          // Scientific Research Bridge Button
+          // 5. SCIENTIFIC RESEARCH & EVIDENCE SECTION LINK
           if (ayah.hasScientificConnections) ...[
             const SizedBox(height: 12),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: isDark
-                      ? [const Color(0xFF163229), const Color(0xFF0F261E)]
-                      : [const Color(0xFFE8F5EE), const Color(0xFFF0FAF4)],
-                ),
-                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                border: Border.all(
-                  color: AppColors.primaryEmerald.withValues(alpha: 0.3),
-                ),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => context.push('/quran/ayah/${ayah.surahNumber}/${ayah.ayahNumber}'),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryEmerald.withValues(alpha: 0.15),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.science_rounded,
-                            size: 18,
-                            color: AppColors.primaryEmerald,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Scientific Research Connection',
-                                style: AppTypography.labelMedium.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.primaryEmerald,
-                                ),
-                              ),
-                              Text(
-                                'Tap to explore empirical evidence & peer-reviewed citations',
-                                style: AppTypography.bodySmall.copyWith(
-                                  fontSize: 11,
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 14,
-                          color: AppColors.primaryEmerald,
-                        ),
-                      ],
-                    ),
+            InkWell(
+              onTap: () => _openScientificEvidenceSheet(context, ref, ayah),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF2B161B) : AppColors.parchmentSubtle,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.primaryMaroon.withValues(alpha: 0.3),
+                    width: 0.9,
                   ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? AppColors.darkSurface
+                            : AppColors.primaryMaroon.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Icon(
+                        Icons.science_outlined,
+                        size: 18,
+                        color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Scientific Research & Empirical Inquest',
+                            style: AppTypography.labelMedium.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Tap to view scientific perspective, consensus status & peer-reviewed sources',
+                            style: AppTypography.bodySmall.copyWith(
+                              fontSize: 11,
+                              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      size: 14,
+                      color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -538,6 +565,8 @@ class SurahDetailScreen extends ConsumerWidget {
   }
 
   void _openScientificEvidenceSheet(BuildContext context, WidgetRef ref, dynamic ayah) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -556,22 +585,26 @@ class SurahDetailScreen extends ConsumerWidget {
 
                 return Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    color: isDark ? AppColors.darkBackground : AppColors.parchment,
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                    border: Border(
+                      top: BorderSide(
+                        color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder,
+                        width: 1.0,
+                      ),
+                    ),
                   ),
                   child: Column(
                     children: [
-                      // Drag handle
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 12),
                         width: 40,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade400,
+                          color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
-                      // Header
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                         child: Row(
@@ -579,17 +612,20 @@ class SurahDetailScreen extends ConsumerWidget {
                           children: [
                             Text(
                               'Scientific Evidence: ${ayah.surahNumber}:${ayah.ayahNumber}',
-                              style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.w700),
+                              style: AppTypography.titleMedium.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon,
+                              ),
                             ),
                             IconButton(
                               icon: const Icon(Icons.close_rounded),
+                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                               onPressed: () => Navigator.of(ctx).pop(),
                             ),
                           ],
                         ),
                       ),
-                      const Divider(),
-                      // Content
+                      Divider(color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder),
                       Expanded(
                         child: connectionsAsync.when(
                           data: (connections) {
@@ -622,13 +658,13 @@ class SurahDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildConnectionDetail(BuildContext context, WidgetRef ref, dynamic conn) {
-    final theme = Theme.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final papersAsync = ref.watch(researchPapersProvider(conn.paperIds as List<String>));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Evidence Badge & Headline
+        // Scientific Headline & Evidence Badge
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -637,47 +673,54 @@ class SurahDetailScreen extends ConsumerWidget {
               onPressed: () => context.push('/science/topic/${conn.topicId}'),
               icon: const Icon(Icons.category_outlined, size: 14),
               label: const Text('View Topic'),
+              style: TextButton.styleFrom(
+                foregroundColor: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 12),
         Text(
           conn.headline,
-          style: AppTypography.headlineLarge.copyWith(fontSize: 18, fontWeight: FontWeight.w700),
+          style: AppTypography.headlineLarge.copyWith(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
+          ),
         ),
         const SizedBox(height: 14),
 
-        // Step 1: Classical Tafseer Context
+        // 1. Classical Tafseer Context
         _buildSectionBlock(
           context,
           'Classical Commentary Context',
           conn.classicalTafseer,
           Icons.menu_book_rounded,
-          AppColors.accentTeal,
+          isDark ? AppColors.accentGoldLight : AppColors.accentSepia,
         ),
         const SizedBox(height: 14),
 
-        // Step 2: Scientific Perspective & Explanation
+        // 2. Scientific Perspective & Explanation
         _buildSectionBlock(
           context,
           'Scientific Analysis',
           conn.explanation,
-          Icons.science_rounded,
-          AppColors.primaryEmerald,
+          Icons.science_outlined,
+          isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon,
         ),
         const SizedBox(height: 14),
 
-        // Step 3: Scientific Consensus Status
+        // 3. Scientific Consensus Status
         _buildSectionBlock(
           context,
           'Established Scientific Consensus',
           conn.scientificConsensus,
-          Icons.verified_rounded,
+          Icons.verified_outlined,
           AppColors.evidenceStrong,
         ),
         const SizedBox(height: 14),
 
-        // Step 4: Scholarly Caveats & Boundaries
+        // 4. Scholarly Caveats & Boundaries
         _buildSectionBlock(
           context,
           'Contextual Caveats & Boundaries',
@@ -687,10 +730,13 @@ class SurahDetailScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 20),
 
-        // Step 5: Peer-Reviewed Research Papers
+        // 5. Peer-Reviewed Research Papers
         Text(
           'Peer-Reviewed Academic Sources',
-          style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.w700),
+          style: AppTypography.titleMedium.copyWith(
+            fontWeight: FontWeight.w700,
+            color: isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon,
+          ),
         ),
         const SizedBox(height: 8),
         papersAsync.when(
@@ -698,7 +744,9 @@ class SurahDetailScreen extends ConsumerWidget {
             if (papers.isEmpty) {
               return Text(
                 'No peer-reviewed papers cited for this claim.',
-                style: AppTypography.bodySmall.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                style: AppTypography.bodySmall.copyWith(
+                  color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                ),
               );
             }
             return Column(
@@ -734,16 +782,16 @@ class SurahDetailScreen extends ConsumerWidget {
     IconData icon,
     Color accentColor,
   ) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceSubtle : AppColors.lightSurfaceSubtle,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+        color: isDark ? AppColors.darkSurfaceSubtle : AppColors.parchmentCard,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder,
+          width: 0.8,
         ),
       ),
       child: Column(
@@ -766,8 +814,8 @@ class SurahDetailScreen extends ConsumerWidget {
           Text(
             content,
             style: AppTypography.bodyMedium.copyWith(
-              color: theme.colorScheme.onSurface,
-              height: 1.5,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              height: 1.55,
             ),
           ),
         ],

@@ -20,14 +20,16 @@ class MainShellScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final selectedColor = isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon;
 
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurface : AppColors.parchmentSubtle,
           border: Border(
             top: BorderSide(
-              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder,
               width: 1.0,
             ),
           ),
@@ -36,35 +38,37 @@ class MainShellScreen extends StatelessWidget {
           selectedIndex: navigationShell.currentIndex,
           onDestinationSelected: _onDestinationSelected,
           height: 68,
-          destinations: const [
+          backgroundColor: isDark ? AppColors.darkSurface : AppColors.parchmentSubtle,
+          indicatorColor: selectedColor.withValues(alpha: 0.12),
+          destinations: [
             NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home_rounded, color: AppColors.primaryEmerald),
+              icon: const Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home_rounded, color: selectedColor),
               label: 'Home',
             ),
             NavigationDestination(
-              icon: Icon(Icons.menu_book_outlined),
-              selectedIcon: Icon(Icons.menu_book_rounded, color: AppColors.primaryEmerald),
+              icon: const Icon(Icons.menu_book_outlined),
+              selectedIcon: Icon(Icons.menu_book_rounded, color: selectedColor),
               label: 'Quran',
             ),
             NavigationDestination(
-              icon: Icon(Icons.library_books_outlined),
-              selectedIcon: Icon(Icons.library_books_rounded, color: AppColors.primaryEmerald),
+              icon: const Icon(Icons.library_books_outlined),
+              selectedIcon: Icon(Icons.library_books_rounded, color: selectedColor),
               label: 'Hadith',
             ),
             NavigationDestination(
-              icon: Icon(Icons.science_outlined),
-              selectedIcon: Icon(Icons.science_rounded, color: AppColors.primaryEmerald),
+              icon: const Icon(Icons.science_outlined),
+              selectedIcon: Icon(Icons.science_rounded, color: selectedColor),
               label: 'Science',
             ),
             NavigationDestination(
-              icon: Icon(Icons.search_outlined),
-              selectedIcon: Icon(Icons.search_rounded, color: AppColors.primaryEmerald),
+              icon: const Icon(Icons.search_outlined),
+              selectedIcon: Icon(Icons.search_rounded, color: selectedColor),
               label: 'Search',
             ),
             NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person, color: AppColors.primaryEmerald),
+              icon: const Icon(Icons.person_outline),
+              selectedIcon: Icon(Icons.person, color: selectedColor),
               label: 'Profile',
             ),
           ],
