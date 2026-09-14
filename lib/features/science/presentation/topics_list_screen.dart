@@ -199,7 +199,7 @@ class _TopicsListScreenState extends ConsumerState<TopicsListScreen> {
                   final matchesQuery = query.isEmpty ||
                       t.title.toLowerCase().contains(query) ||
                       t.summary.toLowerCase().contains(query) ||
-                      (t.description?.toLowerCase().contains(query) ?? false) ||
+                      t.description.toLowerCase().contains(query) ||
                       t.category.toLowerCase().contains(query);
                   return matchesCat && matchesLevel && matchesQuery;
                 }).toList();

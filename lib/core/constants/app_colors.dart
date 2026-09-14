@@ -21,6 +21,7 @@ abstract class AppColors {
   // Light Theme Neutrals
   static const Color lightBackground = Color(0xFFF8FAF9);
   static const Color lightSurface = Color(0xFFFFFFFF);
+  static const Color lightSurfaceCard = Color(0xFFFFFFFF);
   static const Color lightSurfaceSubtle = Color(0xFFF1F5F3);
   static const Color lightBorder = Color(0xFFE2E8F0);
   static const Color lightTextPrimary = Color(0xFF0F172A);
@@ -30,6 +31,7 @@ abstract class AppColors {
   // Dark Theme Neutrals
   static const Color darkBackground = Color(0xFF0C1110);
   static const Color darkSurface = Color(0xFF141C1A);
+  static const Color darkSurfaceCard = Color(0xFF141C1A);
   static const Color darkSurfaceSubtle = Color(0xFF1D2825);
   static const Color darkBorder = Color(0xFF263531);
   static const Color darkTextPrimary = Color(0xFFF1F5F9);

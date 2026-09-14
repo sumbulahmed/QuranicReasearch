@@ -30,8 +30,21 @@ abstract class AppTypography {
         height: 1.4,
       );
 
+  static TextStyle get titleLarge => GoogleFonts.plusJakartaSans(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.2,
+        height: 1.35,
+      );
+
   static TextStyle get titleMedium => GoogleFonts.plusJakartaSans(
         fontSize: 16,
+        fontWeight: FontWeight.w600,
+        height: 1.4,
+      );
+
+  static TextStyle get titleSmall => GoogleFonts.plusJakartaSans(
+        fontSize: 14,
         fontWeight: FontWeight.w600,
         height: 1.4,
       );
@@ -52,6 +65,12 @@ abstract class AppTypography {
         fontSize: 12,
         fontWeight: FontWeight.w400,
         height: 1.4,
+      );
+
+  static TextStyle get labelLarge => GoogleFonts.plusJakartaSans(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.1,
       );
 
   static TextStyle get labelMedium => GoogleFonts.plusJakartaSans(

@@ -359,40 +359,6 @@ class AyahDetailScreen extends ConsumerWidget {
                         ),
                         ...connections.map((conn) => _buildConnectionCard(context, ref, conn, isDark)),
                       ],
-                    );
-                  },
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (err, _) => Center(child: Text('Error loading scientific evidence: $err')),
-                ),
-              ],
-            ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
-      ),
-    );
-  }
-
-  Widget _buildConnectionCard(BuildContext context, WidgetRef ref, dynamic conn, bool isDark) {
-    final theme = Theme.of(context);
-    final papersAsync = ref.watch(researchPapersProvider(conn.paperIds as List<String>));
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-        border: Border.all(
-          color: AppColors.primaryEmerald.withValues(alpha: 0.3),
-        ),
-      ),
-      padding: const EdgeInsets.all(18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               EvidenceBadge(level: conn.evidenceLevel),
               TextButton.icon(
