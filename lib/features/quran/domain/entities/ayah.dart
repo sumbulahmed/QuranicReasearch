@@ -3,6 +3,7 @@ class Ayah {
   final int ayahNumber;
   final String textArabic;
   final String textTranslation;
+  final String? textTranslationUrdu;
   final String? tafseer;
   final bool hasScientificConnections;
   final List<String> scientificConnectionIds;
@@ -12,6 +13,7 @@ class Ayah {
     required this.ayahNumber,
     required this.textArabic,
     required this.textTranslation,
+    this.textTranslationUrdu,
     this.tafseer,
     this.hasScientificConnections = false,
     this.scientificConnectionIds = const [],
@@ -25,6 +27,7 @@ class Ayah {
       ayahNumber: map['ayah_number'] as int,
       textArabic: map['text_arabic'] as String,
       textTranslation: map['text_translation'] as String,
+      textTranslationUrdu: map['text_translation_urdu'] as String?,
       tafseer: map['tafseer'] as String?,
       hasScientificConnections: map['has_scientific_connections'] as bool? ?? false,
       scientificConnectionIds: (map['scientific_connection_ids'] as List<dynamic>?)
@@ -40,6 +43,7 @@ class Ayah {
       'ayah_number': ayahNumber,
       'text_arabic': textArabic,
       'text_translation': textTranslation,
+      'text_translation_urdu': textTranslationUrdu,
       'tafseer': tafseer,
       'has_scientific_connections': hasScientificConnections,
       'scientific_connection_ids': scientificConnectionIds,

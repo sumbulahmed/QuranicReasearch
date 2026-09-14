@@ -10,4 +10,6 @@ abstract class ScienceRepository {
   Future<List<ScientificConnection>> getConnectionsForHadith(String collectionKey, String hadithNumber);
   Future<ResearchPaper?> getResearchPaperById(String paperId);
   Future<List<ResearchPaper>> getResearchPapersByIds(List<String> paperIds);
+  Future<List<ResearchPaper>> getAllResearchPapers();
+  Future<List<ResearchPaper>> searchResearchPapers(String query, {String? field, int? minYear});
 }

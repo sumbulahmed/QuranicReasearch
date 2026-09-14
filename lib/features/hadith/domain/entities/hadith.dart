@@ -38,10 +38,15 @@ class Hadith {
   final int? chapterNumber;
   final String textArabic;
   final String textTranslation;
+  final String? textTranslationUrdu;
   final HadithGrading grading;
   final String? narrator;
+  final String category;
+  final String? explanation;
+  final String? scientificPerspective;
   final bool hasScientificConnections;
   final List<String> scientificConnectionIds;
+  final List<String> relatedResearchIds;
 
   const Hadith({
     required this.collectionKey,
@@ -50,10 +55,15 @@ class Hadith {
     this.chapterNumber,
     required this.textArabic,
     required this.textTranslation,
+    this.textTranslationUrdu,
     this.grading = HadithGrading.sahih,
     this.narrator,
+    this.category = 'General',
+    this.explanation,
+    this.scientificPerspective,
     this.hasScientificConnections = false,
     this.scientificConnectionIds = const [],
+    this.relatedResearchIds = const [],
   });
 
   factory Hadith.fromMap(Map<String, dynamic> map) {
@@ -64,10 +74,18 @@ class Hadith {
       chapterNumber: map['chapter_number'] as int?,
       textArabic: map['text_arabic'] as String,
       textTranslation: map['text_translation'] as String,
+      textTranslationUrdu: map['text_translation_urdu'] as String?,
       grading: HadithGrading.fromString(map['grading'] as String?),
       narrator: map['narrator'] as String?,
+      category: map['category'] as String? ?? 'General',
+      explanation: map['explanation'] as String?,
+      scientificPerspective: map['scientific_perspective'] as String?,
       hasScientificConnections: map['has_scientific_connections'] as bool? ?? false,
       scientificConnectionIds: (map['scientific_connection_ids'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
+      relatedResearchIds: (map['related_research_ids'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],
@@ -82,10 +100,15 @@ class Hadith {
       'chapter_number': chapterNumber,
       'text_arabic': textArabic,
       'text_translation': textTranslation,
+      'text_translation_urdu': textTranslationUrdu,
       'grading': grading.name,
       'narrator': narrator,
+      'category': category,
+      'explanation': explanation,
+      'scientific_perspective': scientificPerspective,
       'has_scientific_connections': hasScientificConnections,
       'scientific_connection_ids': scientificConnectionIds,
+      'related_research_ids': relatedResearchIds,
     };
   }
 }

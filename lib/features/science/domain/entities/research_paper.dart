@@ -8,7 +8,9 @@ class ResearchPaper {
   final String? sourceUrl;
   final String abstractSummary;
   final String methodology;
+  final String field;
   final bool isPeerReviewed;
+  final bool isMockDemo;
 
   const ResearchPaper({
     required this.id,
@@ -20,8 +22,13 @@ class ResearchPaper {
     this.sourceUrl,
     required this.abstractSummary,
     required this.methodology,
+    this.field = 'Interdisciplinary Sciences',
     this.isPeerReviewed = true,
+    this.isMockDemo = true,
   });
+
+  String get description => abstractSummary;
+  String get source => sourceUrl ?? journal;
 
   factory ResearchPaper.fromMap(String id, Map<String, dynamic> data) {
     return ResearchPaper(
@@ -32,9 +39,11 @@ class ResearchPaper {
       publicationYear: data['publication_year'] as int? ?? 2020,
       doi: data['doi'] as String?,
       sourceUrl: data['source_url'] as String?,
-      abstractSummary: data['abstract_summary'] as String? ?? '',
+      abstractSummary: data['abstract_summary'] as String? ?? (data['description'] as String? ?? ''),
       methodology: data['methodology'] as String? ?? 'Empirical Study',
+      field: data['field'] as String? ?? 'Interdisciplinary Sciences',
       isPeerReviewed: data['is_peer_reviewed'] as bool? ?? true,
+      isMockDemo: data['is_mock_demo'] as bool? ?? true,
     );
   }
 
@@ -48,7 +57,9 @@ class ResearchPaper {
       'source_url': sourceUrl,
       'abstract_summary': abstractSummary,
       'methodology': methodology,
+      'field': field,
       'is_peer_reviewed': isPeerReviewed,
+      'is_mock_demo': isMockDemo,
     };
   }
 }

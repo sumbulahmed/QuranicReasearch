@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/science/domain/repositories/science_repository.dart';
 import '../../features/science/data/repositories/mock_science_repository.dart';
@@ -19,6 +20,12 @@ import '../../features/user_library/domain/repositories/user_library_repository.
 import '../../features/user_library/data/repositories/mock_user_library_repository.dart';
 import '../../features/user_library/domain/entities/bookmark.dart';
 import '../../features/user_library/domain/entities/personal_note.dart';
+
+// App Settings & Preferences Providers
+final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
+final arabicFontSizeProvider = StateProvider<double>((ref) => 24.0);
+final appLanguageProvider = StateProvider<String>((ref) => 'English');
+final translationPreferenceProvider = StateProvider<String>((ref) => 'Sahih International');
 
 // Repositories
 final scienceRepositoryProvider = Provider<ScienceRepository>((ref) {
@@ -67,6 +74,11 @@ final researchPapersProvider =
   return repo.getResearchPapersByIds(paperIds);
 });
 
+final allResearchPapersProvider = FutureProvider<List<ResearchPaper>>((ref) async {
+  final repo = ref.watch(scienceRepositoryProvider);
+  return repo.getAllResearchPapers();
+});
+
 // Quran Providers
 final surahsListProvider = FutureProvider<List<Surah>>((ref) async {
   final repo = ref.watch(quranRepositoryProvider);
@@ -83,16 +95,37 @@ final surahAyahsProvider = FutureProvider.family<List<Ayah>, int>((ref, surahNum
   return repo.getAyahsForSurah(surahNumber);
 });
 
+final ayahDetailProvider = FutureProvider.family<Ayah?, (int, int)>((ref, tuple) async {
+  final repo = ref.watch(quranRepositoryProvider);
+  return repo.getAyah(tuple.$1, tuple.$2);
+});
+
 // Hadith Providers
 final hadithCollectionsProvider = FutureProvider<List<HadithCollection>>((ref) async {
   final repo = ref.watch(hadithRepositoryProvider);
   return repo.getCollections();
 });
 
+final hadithCategoriesProvider = FutureProvider<List<String>>((ref) async {
+  final repo = ref.watch(hadithRepositoryProvider);
+  return repo.getCategories();
+});
+
+final allHadithsProvider = FutureProvider<List<Hadith>>((ref) async {
+  final repo = ref.watch(hadithRepositoryProvider);
+  return repo.getAllHadiths();
+});
+
 final collectionHadithsProvider =
     FutureProvider.family<List<Hadith>, String>((ref, collectionKey) async {
   final repo = ref.watch(hadithRepositoryProvider);
   return repo.getHadithsForCollection(collectionKey);
+});
+
+final hadithDetailProvider =
+    FutureProvider.family<Hadith?, (String, String)>((ref, tuple) async {
+  final repo = ref.watch(hadithRepositoryProvider);
+  return repo.getHadith(tuple.$1, tuple.$2);
 });
 
 // User Library Providers
@@ -133,3 +166,4 @@ final personalNotesProvider = FutureProvider<List<PersonalNote>>((ref) async {
   final repo = ref.watch(userLibraryRepositoryProvider);
   return repo.getNotes();
 });
+

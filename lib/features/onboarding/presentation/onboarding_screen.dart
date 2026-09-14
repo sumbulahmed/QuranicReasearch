@@ -17,22 +17,40 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, dynamic>> _pages = [
     {
-      'title': 'The Islamic Knowledge Core',
-      'subtitle': 'Explore the Noble Quran and authentic Hadith in elegant Arabic typography with verified translations and classical Tafseer.',
+      'step': 'EXPLORE',
+      'title': 'Quran & Hadith',
+      'subtitle':
+          'Immerse yourself in the divine words of the Noble Quran and authentic Prophetic Hadith with pristine Arabic typography, English and Urdu translations.',
       'icon': Icons.menu_book_rounded,
+      'badge': 'Sacred Text Core',
       'color': AppColors.primaryEmerald,
     },
     {
-      'title': 'Evidence-Based Scientific Layer',
-      'subtitle': 'Discover authentic scientific connections strictly where defensible. Clear distinctions between established facts, emerging research, and myths.',
+      'step': 'UNDERSTAND',
+      'title': 'Tafseer & Explanations',
+      'subtitle':
+          'Gain profound clarity through authoritative classical Tafseer (Ibn Kathir, Al-Qurtubi, At-Tabari) and contextual scholarly commentary.',
+      'icon': Icons.auto_stories_rounded,
+      'badge': 'Scholarly Hermeneutics',
+      'color': AppColors.accentGold,
+    },
+    {
+      'step': 'DISCOVER',
+      'title': 'Scientific Perspectives',
+      'subtitle':
+          'Explore empirical correlations in human embryology, oceanography, circadian neurology, and astrophysics through transparent, rigorous inquiry.',
       'icon': Icons.science_rounded,
+      'badge': 'Natural Phenomena',
       'color': AppColors.accentTeal,
     },
     {
-      'title': 'Peer-Reviewed Literature',
-      'subtitle': 'Every claim links directly to academic journals, author citations, and DOIs. Built for curious young minds who value scholarly rigor.',
+      'step': 'RESEARCH',
+      'title': 'Credible Research & Sources',
+      'subtitle':
+          'Navigate peer-reviewed scientific literature with verifiable DOIs, academic journals, and a 4-tier taxonomy separating verified facts from internet myths.',
       'icon': Icons.verified_rounded,
-      'color': AppColors.accentGold,
+      'badge': 'Evidence Taxonomy',
+      'color': AppColors.accentCyan,
     },
   ];
 
@@ -82,11 +100,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             color: p['color'] as Color,
                           ),
                         ),
-                        const SizedBox(height: 36),
+                        const SizedBox(height: 28),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: (p['color'] as Color).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: (p['color'] as Color).withValues(alpha: 0.4),
+                            ),
+                          ),
+                          child: Text(
+                            p['step'] as String,
+                            style: AppTypography.labelSmall.copyWith(
+                              color: p['color'] as Color,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 2.0,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
                         Text(
                           p['title'] as String,
                           textAlign: TextAlign.center,
-                          style: AppTypography.headlineLarge.copyWith(fontWeight: FontWeight.w700),
+                          style: AppTypography.headlineLarge.copyWith(fontWeight: FontWeight.w800),
                         ),
                         const SizedBox(height: 14),
                         Text(
