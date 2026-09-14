@@ -974,6 +974,8 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
   Widget _buildSunnahDrinkingSpotlightBanner(BuildContext context, bool isDark) {
     return InkWell(
       onTap: () => context.push('/education/sunnah-drinking'),

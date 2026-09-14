@@ -148,7 +148,6 @@ class _SwallowingBiomechanicsPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width;
-    final h = size.height;
 
     final primaryLine = Paint()
       ..color = (isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon)

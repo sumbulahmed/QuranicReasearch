@@ -1,10 +1,10 @@
 import '../../../../core/models/evidence_level.dart';
 import '../../../science/domain/entities/research_paper.dart';
-import '../entities/hadith_reference.dart';
-import '../entities/practice_step.dart';
-import '../entities/scientific_insight.dart';
-import '../entities/sunnah_practice.dart';
-import '../repositories/education_repository.dart';
+import '../../domain/entities/hadith_reference.dart';
+import '../../domain/entities/practice_step.dart';
+import '../../domain/entities/scientific_insight.dart';
+import '../../domain/entities/sunnah_practice.dart';
+import '../../domain/repositories/education_repository.dart';
 
 class MockEducationRepository implements EducationRepository {
   static const SunnahPractice _sunnahDrinking = SunnahPractice(

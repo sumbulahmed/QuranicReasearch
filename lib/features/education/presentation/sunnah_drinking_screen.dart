@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
@@ -15,8 +14,8 @@ import '../../../../core/widgets/evidence_badge.dart';
 import '../../../../core/widgets/research_citation_card.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../core/providers/app_providers.dart';
-import '../../domain/entities/practice_step.dart';
-import '../../domain/entities/sunnah_practice.dart';
+import '../domain/entities/practice_step.dart';
+import '../domain/entities/sunnah_practice.dart';
 import 'widgets/animated_water_glass.dart';
 import 'widgets/breathing_animation_widget.dart';
 import 'widgets/posture_swallowing_diagram.dart';

@@ -387,6 +387,10 @@ class TopicDetailScreen extends ConsumerWidget {
         description =
             'Level 1 (Direct Alignment): Clear linguistic congruence between original Arabic morphology and rigorous empirical peer-reviewed findings without allegorical straining.';
         break;
+      case EvidenceLevel.moderate:
+        description =
+            'Level 2 (Moderate / Contextual Evidence): Peer-reviewed physiological literature providing contextual mechanism without proving religious doctrine.';
+        break;
       case EvidenceLevel.emerging:
         description =
             'Level 2 (Emerging Correlation): Plausible physiological or astrophysical correlation corroborated by early clinical trials or observational studies.';

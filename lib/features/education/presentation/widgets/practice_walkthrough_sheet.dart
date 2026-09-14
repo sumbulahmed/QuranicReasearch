@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/constants/app_typography.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../domain/entities/practice_step.dart';
@@ -100,7 +99,7 @@ class _PracticeWalkthroughSheetState extends State<PracticeWalkthroughSheet> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.88,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.parchmentBackground,
+        color: isDark ? AppColors.darkSurface : AppColors.parchment,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         border: Border.all(
           color: isDark
@@ -229,7 +228,7 @@ class _PracticeWalkthroughSheetState extends State<PracticeWalkthroughSheet> {
                   // Step Title
                   Text(
                     step.title,
-                    style: AppTypography.headlineSmall.copyWith(
+                    style: AppTypography.headlineMedium.copyWith(
                       fontWeight: FontWeight.w700,
                       color: isDark
                           ? AppColors.darkTextHeading
