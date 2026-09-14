@@ -131,7 +131,7 @@ class _HadithCollectionsScreenState extends ConsumerState<HadithCollectionsScree
               );
             },
             loading: () => const SizedBox(height: 38),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (err, stack) => const SizedBox.shrink(),
           ),
 
           const SizedBox(height: 8),
@@ -372,7 +372,7 @@ class _HadithCollectionsScreenState extends ConsumerState<HadithCollectionsScree
         return ListView.separated(
           padding: AppDimensions.paddingScreen,
           itemCount: filtered.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          separatorBuilder: (_, index) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final hadith = filtered[index];
             return AppCard(

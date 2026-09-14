@@ -4,8 +4,7 @@ enum LibraryItemType {
   hadith,
   topic,
   scientificTopic,
-  researchPaper,
-  paper;
+  researchPaper;
 
   static LibraryItemType fromString(String? value) {
     switch (value?.toLowerCase()) {

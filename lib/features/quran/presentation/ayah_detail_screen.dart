@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -341,6 +341,74 @@ class AyahDetailScreen extends ConsumerWidget {
                       );
                     }
 
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.science_rounded, color: AppColors.primaryEmerald, size: 22),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Scientific Research Alignment',
+                                style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ...connections.map((conn) => _buildConnectionCard(context, ref, conn, isDark)),
+                      ],
+                    );
+                  },
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (err, _) => Center(child: Text('Error loading scientific evidence: $err')),
+                ),
+              ],
+            ),
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(child: Text('Error: $err')),
+      ),
+    );
+  }
+
+  Widget _buildConnectionCard(BuildContext context, WidgetRef ref, dynamic conn, bool isDark) {
+    final papersAsync = ref.watch(researchPapersProvider(conn.paperIds as List<String>));
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+        border: Border.all(
+          color: AppColors.primaryEmerald.withValues(alpha: 0.3),
+        ),
+      ),
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              EvidenceBadge(level: conn.evidenceLevel),
+              TextButton.icon(
+                onPressed: () => context.push('/science/topic/${conn.topicId}'),
+                icon: const Icon(Icons.explore_outlined, size: 14),
+                label: const Text('Explore Topic'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            conn.headline,
+            style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 14),
+
+          // Context block
           _buildInfoBlock(
             context,
             'Linguistic & Classical Context',

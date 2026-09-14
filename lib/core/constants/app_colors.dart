@@ -15,6 +15,7 @@ abstract class AppColors {
   // Evidence Taxonomy Level Colors
   static const Color evidenceStrong = Color(0xFF10B981);       // Verified scientific consensus
   static const Color evidenceEmerging = Color(0xFFF59E0B);     // Peer-reviewed studies in progress
+  static const Color evidenceModerate = Color(0xFFF59E0B);     // Alias for emerging/moderate
   static const Color evidencePossible = Color(0xFF0EA5E9);     // Conceptual / linguistic parallel
   static const Color evidenceUnsupported = Color(0xFFEF4444);  // Debunked / popular internet myth
 

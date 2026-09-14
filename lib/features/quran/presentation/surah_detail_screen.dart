@@ -7,8 +7,6 @@ import '../../../core/constants/app_dimensions.dart';
 import '../../../core/constants/app_typography.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../../core/widgets/app_card.dart';
-import '../../../core/widgets/evidence_badge.dart';
-import '../../../core/widgets/research_citation_card.dart';
 import '../../../core/providers/app_providers.dart';
 import '../../user_library/domain/entities/bookmark.dart';
 
