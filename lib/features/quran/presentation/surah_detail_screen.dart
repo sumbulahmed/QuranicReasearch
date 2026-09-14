@@ -8,10 +8,12 @@ import '../../../core/constants/app_typography.dart';
 import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../../core/widgets/app_card.dart';
+import '../../../core/providers/app_providers.dart';
 import '../../../core/widgets/custom_divider.dart';
 import '../../../core/widgets/evidence_badge.dart';
 import '../../../core/widgets/research_citation_card.dart';
 import '../../../core/widgets/translation_text.dart';
+import '../../user_library/domain/entities/bookmark.dart';
 import '../../../core/providers/app_providers.dart';
 import '../../user_library/domain/entities/bookmark.dart';
 
@@ -563,7 +565,6 @@ class SurahDetailScreen extends ConsumerWidget {
       ),
     );
   }
-
   void _openScientificEvidenceSheet(BuildContext context, WidgetRef ref, dynamic ayah) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 

@@ -27,19 +27,102 @@ class HadithCollectionsScreen extends ConsumerWidget {
         ),
       ),
       body: AppBackground(
-        child: collectionsAsync.when(
-          data: (collections) {
-            return ListView.separated(
-              padding: AppDimensions.paddingScreen,
-              itemCount: collections.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 14),
-              itemBuilder: (context, index) {
-                final col = collections[index];
-                return AppCard(
-                  onTap: () => context.push('/hadith/collection/${col.key}'),
-                  padding: AppDimensions.paddingCard,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          children: [
+            // Search Bar
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (_) => setState(() {}),
+                decoration: InputDecoration(
+                  hintText: 'Search hadiths by keyword, narrator, or topic...',
+                  hintStyle: AppTypography.bodyMedium.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                  ),
+                  prefixIcon: const Icon(Icons.search_rounded, color: AppColors.primaryEmerald),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear_rounded, size: 20),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() {});
+                          },
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: isDark ? AppColors.darkSurfaceSubtle : AppColors.lightSurfaceSubtle,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                    borderSide: BorderSide(
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                    borderSide: BorderSide(
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                    borderSide: const BorderSide(
+                      color: AppColors.primaryEmerald,
+                      width: 1.5,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Categories Filter Chips
+            categoriesAsync.when(
+              data: (categories) {
+                final allCats = ['All', ...categories];
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  child: Row(
+                    children: allCats.map((cat) {
+                      final isSelected = _selectedCategory == cat;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: FilterChip(
+                          selected: isSelected,
+                          label: Text(cat),
+                          onSelected: (_) {
+                            setState(() {
+                              _selectedCategory = cat;
+                            });
+                          },
+                          selectedColor: AppColors.primaryEmerald,
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.white : null,
+                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
+                            fontSize: 12,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
+              loading: () => const SizedBox(height: 38),
+              error: (err, stack) => const SizedBox.shrink(),
+            ),
+
+            const SizedBox(height: 8),
+
+            // Main View: Either Search/Filter Results OR Compendiums List
+            Expanded(
+              child: isSearching
+                  ? _buildFilteredHadithsView(allHadithsAsync, query, _selectedCategory, isDark)
+                  : _buildCollectionsView(collectionsAsync, allHadithsAsync, isDark),
+            ),
+          ],
+        ),
+      );
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

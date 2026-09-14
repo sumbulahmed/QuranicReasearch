@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -375,7 +375,6 @@ class AyahDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildConnectionCard(BuildContext context, WidgetRef ref, dynamic conn, bool isDark) {
-    final theme = Theme.of(context);
     final papersAsync = ref.watch(researchPapersProvider(conn.paperIds as List<String>));
 
     return Container(

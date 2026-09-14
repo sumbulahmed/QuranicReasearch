@@ -16,6 +16,9 @@ import '../../features/search/presentation/search_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/user_library/presentation/bookmarks_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/quran/presentation/ayah_detail_screen.dart';
+import '../../features/hadith/presentation/hadith_detail_screen.dart';
+import '../../features/research/presentation/research_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -58,11 +61,32 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: '/quran/ayah/:surahId/:ayahId',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final surahId = int.tryParse(state.pathParameters['surahId'] ?? '1') ?? 1;
+        final ayahId = int.tryParse(state.pathParameters['ayahId'] ?? '1') ?? 1;
+        return AyahDetailScreen(surahNumber: surahId, ayahNumber: ayahId);
+      },
+    ),
+    GoRoute(
       path: '/hadith/collection/:key',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) {
         final key = state.pathParameters['key'] ?? 'bukhari';
         return HadithListScreen(collectionKey: key);
+      },
+    ),
+    GoRoute(
+      path: '/hadith/detail/:collectionKey/:hadithNumber',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final collectionKey = state.pathParameters['collectionKey'] ?? 'bukhari';
+        final hadithNumber = state.pathParameters['hadithNumber'] ?? '1';
+        return HadithDetailScreen(
+          collectionKey: collectionKey,
+          hadithNumber: hadithNumber,
+        );
       },
     ),
     GoRoute(
@@ -72,6 +96,11 @@ final appRouter = GoRouter(
         final topicId = state.pathParameters['topicId'] ?? 'embryology';
         return TopicDetailScreen(topicId: topicId);
       },
+    ),
+    GoRoute(
+      path: '/research',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const ResearchScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

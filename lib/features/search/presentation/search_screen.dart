@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_dimensions.dart';
 import '../../../core/constants/app_typography.dart';
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/research_citation_card.dart';
 import '../../../core/providers/app_providers.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -19,6 +20,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   String _query = '';
   String _filter = 'All';
 
+  final List<String> _quickSuggestions = [
+    'Embryology',
+    'Deep Sea',
+    'Prefrontal Cortex',
+    'Black Seed',
+    'Intermittent Fasting',
+    'Mountains',
+    'Expanding Universe',
+    'Sleep',
+  ];
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -28,15 +40,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     final topicsAsync = ref.watch(scientificTopicsProvider);
+    final papersAsync = ref.watch(allResearchPapersProvider);
     final quranRepo = ref.watch(quranRepositoryProvider);
     final hadithRepo = ref.watch(hadithRepositoryProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Unified Search',
+          'Unified Knowledge Search',
           style: AppTypography.headlineMedium.copyWith(fontWeight: FontWeight.w700),
         ),
       ),
@@ -48,8 +62,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search Quran, Hadith, or Science (e.g. embryo, ocean, waves)...',
-                prefixIcon: const Icon(Icons.search_rounded),
+                hintText: 'Search Quran, Hadith, Topics & Papers...',
+                hintStyle: AppTypography.bodyMedium.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                ),
+                prefixIcon: const Icon(Icons.search_rounded, color: AppColors.primaryEmerald),
                 suffixIcon: _query.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear_rounded),
@@ -59,6 +76,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         },
                       )
                     : null,
+                filled: true,
+                fillColor: isDark ? AppColors.darkSurfaceSubtle : AppColors.lightSurfaceSubtle,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                  borderSide: BorderSide(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  ),
+                ),
               ),
               onChanged: (val) => setState(() => _query = val.trim()),
             ),
@@ -67,20 +92,21 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           // Filter Chips
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Row(
-              children: ['All', 'Quran', 'Hadith', 'Science'].map((f) {
+              children: ['All', 'Quran', 'Hadith', 'Science', 'Papers'].map((f) {
                 final isSelected = _filter == f;
                 return Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: ChoiceChip(
+                  child: FilterChip(
                     label: Text(f),
                     selected: isSelected,
                     onSelected: (_) => setState(() => _filter = f),
-                    selectedColor: AppColors.primaryEmerald.withValues(alpha: 0.15),
-                    labelStyle: AppTypography.labelSmall.copyWith(
-                      color: isSelected ? AppColors.primaryEmerald : theme.colorScheme.onSurface,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    selectedColor: AppColors.primaryEmerald,
+                    labelStyle: TextStyle(
+                      color: isSelected ? Colors.white : null,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
+                      fontSize: 12,
                     ),
                   ),
                 );
@@ -94,7 +120,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             child: _query.isEmpty
                 ? _buildEmptyState(context)
                 : FutureBuilder<Map<String, dynamic>>(
-                    future: _performSearch(quranRepo, hadithRepo, topicsAsync.value ?? []),
+                    future: _performSearch(
+                      quranRepo,
+                      hadithRepo,
+                      topicsAsync.value ?? [],
+                      papersAsync.value ?? [],
+                    ),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
@@ -107,15 +138,30 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       final ayahs = results['ayahs'] as List<dynamic>;
                       final hadiths = results['hadiths'] as List<dynamic>;
                       final topics = results['topics'] as List<dynamic>;
+                      final papers = results['papers'] as List<dynamic>;
 
-                      final total = ayahs.length + hadiths.length + topics.length;
+                      final total = ayahs.length + hadiths.length + topics.length + papers.length;
                       if (total == 0) {
                         return Center(
-                          child: Text(
-                            'No matches found for "$_query"',
-                            style: AppTypography.bodyMedium.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.search_off_rounded, size: 54, color: theme.colorScheme.onSurfaceVariant),
+                              const SizedBox(height: 12),
+                              Text(
+                                'No matches found for "$_query"',
+                                style: AppTypography.titleMedium.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Try alternative terms like "water", "embryo", "sleep", or "heart"',
+                                style: AppTypography.bodySmall.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       }
@@ -129,13 +175,21 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             const SizedBox(height: 16),
                           ],
                           if ((_filter == 'All' || _filter == 'Quran') && ayahs.isNotEmpty) ...[
-                            _buildResultSectionHeader('Quranic Ayahs (${ayahs.length})'),
+                            _buildResultSectionHeader('Noble Qur\'an Verses (${ayahs.length})'),
                             ...ayahs.map((a) => _buildAyahResult(context, a)),
                             const SizedBox(height: 16),
                           ],
                           if ((_filter == 'All' || _filter == 'Hadith') && hadiths.isNotEmpty) ...[
-                            _buildResultSectionHeader('Hadiths (${hadiths.length})'),
+                            _buildResultSectionHeader('Prophetic Hadiths (${hadiths.length})'),
                             ...hadiths.map((h) => _buildHadithResult(context, h)),
+                            const SizedBox(height: 16),
+                          ],
+                          if ((_filter == 'All' || _filter == 'Papers') && papers.isNotEmpty) ...[
+                            _buildResultSectionHeader('Research Literature (${papers.length})'),
+                            ...papers.map((p) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: ResearchCitationCard(paper: p),
+                                )),
                             const SizedBox(height: 16),
                           ],
                         ],
@@ -152,6 +206,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     dynamic quranRepo,
     dynamic hadithRepo,
     List<dynamic> topics,
+    List<dynamic> papers,
   ) async {
     final lower = _query.toLowerCase();
     final matchedAyahs = await quranRepo.searchAyahs(_query);
@@ -160,37 +215,74 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         .where((t) =>
             t.title.toLowerCase().contains(lower) ||
             t.summary.toLowerCase().contains(lower) ||
-            t.tags.any((tag) => tag.toString().toLowerCase().contains(lower)))
+            (t.description?.toLowerCase().contains(lower) ?? false) ||
+            t.category.toLowerCase().contains(lower))
+        .toList();
+    final matchedPapers = papers
+        .where((p) =>
+            p.title.toLowerCase().contains(lower) ||
+            p.journal.toLowerCase().contains(lower) ||
+            (p.doi?.toLowerCase().contains(lower) ?? false) ||
+            (p.abstractSummary?.toLowerCase().contains(lower) ?? false) ||
+            p.authors.any((a) => a.toString().toLowerCase().contains(lower)))
         .toList();
 
     return {
       'ayahs': matchedAyahs,
       'hadiths': matchedHadiths,
       'topics': matchedTopics,
+      'papers': matchedPapers,
     };
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: 20),
           Icon(
             Icons.manage_search_rounded,
-            size: 56,
-            color: Theme.of(context).colorScheme.outlineVariant,
+            size: 64,
+            color: AppColors.primaryEmerald.withValues(alpha: 0.6),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
-            'Explore Quran, Hadith & Science',
-            style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.w700),
+            'Explore Across All Dimensions',
+            style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
-            'Try typing "embryo", "waves", "deep sea", or "light"',
+            'Search verses, narrations, empirical topics, and academic citations.',
+            textAlign: TextAlign.center,
             style: AppTypography.bodySmall.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
+          ),
+          const SizedBox(height: 24),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Popular Research Topics',
+              style: AppTypography.labelMedium.copyWith(fontWeight: FontWeight.w700),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _quickSuggestions.map((suggestion) {
+              return ActionChip(
+                avatar: const Icon(Icons.trending_up_rounded, size: 14, color: AppColors.primaryEmerald),
+                label: Text(suggestion),
+                onPressed: () {
+                  _searchController.text = suggestion;
+                  setState(() {
+                    _query = suggestion;
+                  });
+                },
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -248,7 +340,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: AppCard(
-        onTap: () => context.push('/quran/surah/${ayah.surahNumber}'),
+        onTap: () => context.push('/quran/ayah/${ayah.surahNumber}/${ayah.ayahNumber}'),
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,7 +392,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: AppCard(
-        onTap: () => context.push('/hadith/collection/${hadith.collectionKey}'),
+        onTap: () => context.push('/hadith/detail/${hadith.collectionKey}/${hadith.hadithNumber}'),
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,3 +419,4 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 }
+

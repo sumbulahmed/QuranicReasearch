@@ -1,17 +1,25 @@
 enum LibraryItemType {
   ayah,
+  surah,
   hadith,
   topic,
-  paper;
+  scientificTopic,
+  researchPaper;
 
   static LibraryItemType fromString(String? value) {
     switch (value?.toLowerCase()) {
+      case 'surah':
+        return LibraryItemType.surah;
       case 'hadith':
         return LibraryItemType.hadith;
+      case 'scientifictopic':
+      case 'scientific_topic':
       case 'topic':
-        return LibraryItemType.topic;
+        return LibraryItemType.scientificTopic;
+      case 'researchpaper':
+      case 'research_paper':
       case 'paper':
-        return LibraryItemType.paper;
+        return LibraryItemType.researchPaper;
       default:
         return LibraryItemType.ayah;
     }

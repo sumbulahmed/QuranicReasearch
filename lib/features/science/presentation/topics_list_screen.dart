@@ -111,24 +111,115 @@ class _TopicsListScreenState extends ConsumerState<TopicsListScreen> {
                   final isSelected = _selectedCategory == catTuple.$1;
                   final activeColor = isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon;
 
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: FilterChip(
-                      label: Text(catTuple.$2),
-                      selected: isSelected,
-                      onSelected: (_) => setState(() => _selectedCategory = catTuple.$1),
-                      selectedColor: activeColor,
-                      backgroundColor: isDark ? AppColors.darkSurfaceSubtle : AppColors.parchmentSubtle,
-                      side: BorderSide(
-                        color: isSelected ? activeColor : (isDark ? AppColors.darkBorder : AppColors.parchmentBorder),
-                        width: 0.8,
+          // Evidence Level Sub-Filter
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Row(
+              children: [
+                ChoiceChip(
+                  label: const Text('All Levels'),
+                  selected: _selectedLevel == null,
+                  onSelected: (_) => setState(() => _selectedLevel = null),
+                  selectedColor: AppColors.primaryEmerald.withValues(alpha: 0.2),
+                ),
+                const SizedBox(width: 6),
+                ChoiceChip(
+                  label: const Text('Strong'),
+                  selected: _selectedLevel == EvidenceLevel.strong,
+                  onSelected: (_) => setState(() => _selectedLevel = _selectedLevel == EvidenceLevel.strong ? null : EvidenceLevel.strong),
+                  selectedColor: AppColors.evidenceStrong.withValues(alpha: 0.2),
+                ),
+                const SizedBox(width: 6),
+                ChoiceChip(
+                  label: const Text('Emerging'),
+                  selected: _selectedLevel == EvidenceLevel.emerging,
+                  onSelected: (_) => setState(() => _selectedLevel = _selectedLevel == EvidenceLevel.emerging ? null : EvidenceLevel.emerging),
+                  selectedColor: AppColors.evidenceEmerging.withValues(alpha: 0.2),
+                ),
+                const SizedBox(width: 6),
+                ChoiceChip(
+                  label: const Text('Possible'),
+                  selected: _selectedLevel == EvidenceLevel.possible,
+                  onSelected: (_) => setState(() => _selectedLevel = _selectedLevel == EvidenceLevel.possible ? null : EvidenceLevel.possible),
+                  selectedColor: AppColors.evidencePossible.withValues(alpha: 0.2),
+                ),
+                const SizedBox(width: 6),
+                ChoiceChip(
+                  label: const Text('Myth-Buster'),
+                  selected: _selectedLevel == EvidenceLevel.unsupported,
+                  onSelected: (_) => setState(() => _selectedLevel = _selectedLevel == EvidenceLevel.unsupported ? null : EvidenceLevel.unsupported),
+                  selectedColor: AppColors.evidenceUnsupported.withValues(alpha: 0.2),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 6),
+
+          // Topics List
+          Expanded(
+            child: topicsAsync.when(
+              data: (topics) {
+                final query = _searchController.text.trim().toLowerCase();
+                final filtered = topics.where((t) {
+                  final matchesCat = _selectedCategory == 'All' || t.category == _selectedCategory;
+                  final matchesLevel = _selectedLevel == null || t.evidenceLevel == _selectedLevel;
+                  final matchesQuery = query.isEmpty ||
+                      t.title.toLowerCase().contains(query) ||
+                      t.summary.toLowerCase().contains(query) ||
+                      t.description.toLowerCase().contains(query) ||
+                      t.category.toLowerCase().contains(query);
+                  return matchesCat && matchesLevel && matchesQuery;
+                }).toList();
+
+                if (filtered.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.science_outlined, size: 48, color: theme.colorScheme.onSurfaceVariant),
+                        const SizedBox(height: 12),
+                        Text('No topics match your criteria.', style: AppTypography.titleMedium.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                      ],
+                    ),
+                  );
+                }
+
+                return ListView.separated(
+                  padding: AppDimensions.paddingScreen,
+                  itemCount: filtered.length,
+                  separatorBuilder: (_, index) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final topic = filtered[index];
+                    final isSelected = _selectedCategory == topic.category;
+                    final activeColor = isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: FilterChip(
+                        label: Text(topic.title),
+                        selected: isSelected,
+                        onSelected: (_) => setState(() => _selectedCategory = topic.category),
+                        selectedColor: activeColor,
+                        backgroundColor: isDark ? AppColors.darkSurfaceSubtle : AppColors.parchmentSubtle,
+                        side: BorderSide(
+                          color: isSelected ? activeColor : (isDark ? AppColors.darkBorder : AppColors.parchmentBorder),
+                          width: 0.8,
+                        ),
+                        labelStyle: AppTypography.labelSmall.copyWith(
+                          color: isSelected
+                              ? (isDark ? Colors.black : Colors.white)
+                              : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                        ),
                       ),
-                      labelStyle: AppTypography.labelSmall.copyWith(
-                        color: isSelected
-                            ? (isDark ? Colors.black : Colors.white)
-                            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
-                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          );
                     ),
                   );
                 }).toList(),
