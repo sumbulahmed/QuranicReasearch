@@ -14,6 +14,7 @@ void main() {
     expect(find.byType(QuranicResearchApp), findsOneWidget);
 
     // Fast-forward past splash screen delay so no timers remain pending
-    await tester.pump(const Duration(milliseconds: 1500));
+    await tester.pump(const Duration(milliseconds: 2500));
+    await tester.pumpAndSettle();
   });
 }
