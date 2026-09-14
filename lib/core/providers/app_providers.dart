@@ -24,8 +24,8 @@ import '../../features/user_library/domain/entities/personal_note.dart';
 // App Settings & Preferences Providers
 final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
 final arabicFontSizeProvider = StateProvider<double>((ref) => 24.0);
-final appLanguageProvider = StateProvider<String>((ref) => 'English');
-final translationPreferenceProvider = StateProvider<String>((ref) => 'Sahih International');
+final appLanguageProvider = StateProvider<String>((ref) => 'en');
+final translationPreferenceProvider = StateProvider<String>((ref) => 'english');
 
 // Repositories
 final scienceRepositoryProvider = Provider<ScienceRepository>((ref) {

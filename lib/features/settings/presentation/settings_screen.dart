@@ -24,8 +24,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
     final arabicFontSize = ref.watch(arabicFontSizeProvider);
-    final translationPref = ref.watch(translationPreferenceProvider);
-    final appLanguage = ref.watch(appLanguageProvider);
+    final rawTranslationPref = ref.watch(translationPreferenceProvider);
+    final translationPref = const ['both', 'english', 'urdu'].contains(rawTranslationPref)
+        ? rawTranslationPref
+        : 'english';
+    final rawAppLanguage = ref.watch(appLanguageProvider);
+    final appLanguage = (rawAppLanguage == 'ur') ? 'ur' : 'en';
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 

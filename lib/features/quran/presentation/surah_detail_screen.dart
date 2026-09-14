@@ -29,7 +29,10 @@ class SurahDetailScreen extends ConsumerWidget {
     final ayahsAsync = ref.watch(surahAyahsProvider(surahNumber));
     final bookmarks = ref.watch(bookmarksProvider).value ?? [];
     final arabicFontSize = ref.watch(arabicFontSizeProvider);
-    final translationPref = ref.watch(translationPreferenceProvider);
+    final rawTranslationPref = ref.watch(translationPreferenceProvider);
+    final translationPref = const ['both', 'english', 'urdu'].contains(rawTranslationPref)
+        ? rawTranslationPref
+        : 'english';
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -119,7 +122,10 @@ class SurahDetailScreen extends ConsumerWidget {
         return Consumer(
           builder: (context, ref, _) {
             final currentSize = ref.watch(arabicFontSizeProvider);
-            final currentPref = ref.watch(translationPreferenceProvider);
+            final rawPref = ref.watch(translationPreferenceProvider);
+            final currentPref = const ['both', 'english', 'urdu'].contains(rawPref)
+                ? rawPref
+                : 'english';
 
             return Padding(
               padding: const EdgeInsets.all(22),
