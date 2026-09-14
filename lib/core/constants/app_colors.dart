@@ -33,7 +33,10 @@ abstract class AppColors {
   // Refined Scholarly Evidence Taxonomy (Muted Mineral & Earth Tones)
   static const Color evidenceStrong = Color(0xFF2E5E41);      // Forest sage / olive consensus
   static const Color evidenceEmerging = Color(0xFFB37324);    // Warm amber ochre
+<<<<<<< Updated upstream
   static const Color evidenceModerate = Color(0xFFB37324);    // Backward compatible alias
+=======
+>>>>>>> Stashed changes
   static const Color evidencePossible = Color(0xFF3D6076);    // Muted slate indigo
   static const Color evidenceUnsupported = Color(0xFF9A3838); // Terracotta crimson
 

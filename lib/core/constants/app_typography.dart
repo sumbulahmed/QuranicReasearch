@@ -1,35 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// Literary book typography system blending classical English serif (EB Garamond)
+/// with authentic Arabic calligraphy (Amiri).
 abstract class AppTypography {
-  // English / Latin Text Styles (Plus Jakarta Sans)
-  static TextStyle get displayLarge => GoogleFonts.plusJakartaSans(
+  // Classical Book English Typography (EB Garamond)
+  static TextStyle get displayLarge => GoogleFonts.ebGaramond(
         fontSize: 32,
         fontWeight: FontWeight.w700,
-        letterSpacing: -0.5,
+        letterSpacing: -0.3,
         height: 1.25,
       );
 
-  static TextStyle get displayMedium => GoogleFonts.plusJakartaSans(
-        fontSize: 24,
+  static TextStyle get displayMedium => GoogleFonts.ebGaramond(
+        fontSize: 26,
         fontWeight: FontWeight.w700,
-        letterSpacing: -0.3,
+        letterSpacing: -0.2,
         height: 1.3,
       );
 
-  static TextStyle get headlineLarge => GoogleFonts.plusJakartaSans(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        letterSpacing: -0.2,
+  static TextStyle get headlineLarge => GoogleFonts.ebGaramond(
+        fontSize: 22,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.1,
         height: 1.35,
       );
 
-  static TextStyle get headlineMedium => GoogleFonts.plusJakartaSans(
-        fontSize: 18,
+  static TextStyle get headlineMedium => GoogleFonts.ebGaramond(
+        fontSize: 19,
         fontWeight: FontWeight.w600,
-        height: 1.4,
+        height: 1.35,
       );
 
+  static TextStyle get titleLarge => GoogleFonts.ebGaramond(
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+        height: 1.35,
+      );
+
+<<<<<<< Updated upstream
   static TextStyle get titleLarge => GoogleFonts.plusJakartaSans(
         fontSize: 18,
         fontWeight: FontWeight.w600,
@@ -38,29 +47,111 @@ abstract class AppTypography {
       );
 
   static TextStyle get titleMedium => GoogleFonts.plusJakartaSans(
+=======
+  static TextStyle get titleMedium => GoogleFonts.ebGaramond(
+>>>>>>> Stashed changes
         fontSize: 16,
         fontWeight: FontWeight.w600,
         height: 1.4,
       );
 
+<<<<<<< Updated upstream
   static TextStyle get titleSmall => GoogleFonts.plusJakartaSans(
+=======
+  static TextStyle get titleSmall => GoogleFonts.ebGaramond(
+>>>>>>> Stashed changes
         fontSize: 14,
         fontWeight: FontWeight.w600,
         height: 1.4,
       );
 
+<<<<<<< Updated upstream
   static TextStyle get bodyLarge => GoogleFonts.plusJakartaSans(
         fontSize: 16,
+=======
+  // Long-Form Reading & Content
+  static TextStyle get bodyLarge => GoogleFonts.ebGaramond(
+        fontSize: 17,
+        fontWeight: FontWeight.w400,
+        height: 1.65,
+      );
+
+  static TextStyle get bodyMedium => GoogleFonts.ebGaramond(
+        fontSize: 15,
+        fontWeight: FontWeight.w400,
+        height: 1.55,
+      );
+
+  static TextStyle get bodySmall => GoogleFonts.ebGaramond(
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+        height: 1.45,
+      );
+
+  // Labels, Metadata & Captions
+  static TextStyle get labelLarge => GoogleFonts.ebGaramond(
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.5,
+      );
+
+  static TextStyle get labelMedium => GoogleFonts.ebGaramond(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.4,
+      );
+
+  static TextStyle get labelSmall => GoogleFonts.ebGaramond(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.5,
+      );
+
+  // Dedicated Literary Hierarchy
+  static TextStyle get appTitle => GoogleFonts.ebGaramond(
+        fontSize: 22,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.2,
+      );
+
+  static TextStyle get sectionHeading => GoogleFonts.ebGaramond(
+        fontSize: 19,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.1,
+      );
+
+  static TextStyle get surahTitle => GoogleFonts.ebGaramond(
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+      );
+
+  static TextStyle get translationText => GoogleFonts.ebGaramond(
+        fontSize: 16.5,
+        fontWeight: FontWeight.w400,
+        height: 1.65,
+      );
+
+  static TextStyle get tafseerText => GoogleFonts.ebGaramond(
+        fontSize: 14.5,
+        fontWeight: FontWeight.w400,
+        height: 1.6,
+        fontStyle: FontStyle.italic,
+      );
+
+  static TextStyle get scientificAnalysisText => GoogleFonts.ebGaramond(
+        fontSize: 15,
+>>>>>>> Stashed changes
         fontWeight: FontWeight.w400,
         height: 1.6,
       );
 
-  static TextStyle get bodyMedium => GoogleFonts.plusJakartaSans(
-        fontSize: 14,
+  static TextStyle get researchCitationText => GoogleFonts.ebGaramond(
+        fontSize: 13,
         fontWeight: FontWeight.w400,
         height: 1.5,
       );
 
+<<<<<<< Updated upstream
   static TextStyle get bodySmall => GoogleFonts.plusJakartaSans(
         fontSize: 12,
         fontWeight: FontWeight.w400,
@@ -81,15 +172,19 @@ abstract class AppTypography {
 
   static TextStyle get labelSmall => GoogleFonts.plusJakartaSans(
         fontSize: 11,
+=======
+  static TextStyle get metadataText => GoogleFonts.ebGaramond(
+        fontSize: 11.5,
+>>>>>>> Stashed changes
         fontWeight: FontWeight.w500,
         letterSpacing: 0.3,
       );
 
-  // Arabic Quranic & Hadith Typography (Amiri)
+  // Traditional Arabic Quranic & Hadith Typography (Amiri)
   static TextStyle get quranTextLarge => GoogleFonts.amiri(
         fontSize: 28,
         fontWeight: FontWeight.bold,
-        height: 2.2, // Essential multiplier to prevent diacritic clipping
+        height: 2.2, // Generous multiplier prevents diacritic / tashkeel clipping
       );
 
   static TextStyle get quranTextMedium => GoogleFonts.amiri(

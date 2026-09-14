@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';
 import '../constants/app_dimensions.dart';
 
+/// Literary manuscript card resembling a folio page or vintage research journal section.
 class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
@@ -8,6 +10,7 @@ class AppCard extends StatelessWidget {
   final Color? backgroundColor;
   final Color? borderColor;
   final double? borderRadius;
+  final bool showMaroonAccent;
 
   const AppCard({
     super.key,
@@ -17,6 +20,7 @@ class AppCard extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.borderRadius,
+    this.showMaroonAccent = false,
   });
 
   @override
@@ -24,20 +28,29 @@ class AppCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final cardRadius = BorderRadius.circular(borderRadius ?? AppDimensions.radiusLg);
-    final bg = backgroundColor ?? (isDark ? theme.colorScheme.surface : theme.colorScheme.surface);
-    final border = borderColor ?? theme.colorScheme.outlineVariant.withValues(alpha: isDark ? 0.3 : 0.6);
+    final cardRadius = BorderRadius.circular(borderRadius ?? AppDimensions.radiusMd);
+    final bg = backgroundColor ??
+        (isDark ? AppColors.darkSurface : AppColors.parchmentCard);
+    final border = borderColor ??
+        (isDark ? AppColors.darkBorder : AppColors.parchmentBorder);
 
     final content = Container(
       padding: padding ?? AppDimensions.paddingCard,
       decoration: BoxDecoration(
         color: bg,
         borderRadius: cardRadius,
-        border: Border.all(color: border, width: 1.0),
+        border: Border.all(
+          color: showMaroonAccent
+              ? (isDark ? AppColors.darkTextHeading : AppColors.primaryMaroon.withValues(alpha: 0.35))
+              : border,
+          width: showMaroonAccent ? 1.2 : 0.9,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
-            blurRadius: 8,
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.25)
+                : const Color(0xFF6B5848).withValues(alpha: 0.05),
+            blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],

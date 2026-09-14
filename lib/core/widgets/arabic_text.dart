@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../constants/app_colors.dart';
 
+/// Traditional Arabic calligraphy display widget using the authentic Amiri font.
+/// Enforces generous vertical line heights to prevent clipping of tashkeel/diacritics.
 class ArabicText extends StatelessWidget {
   final String text;
   final double fontSize;
@@ -12,8 +15,8 @@ class ArabicText extends StatelessWidget {
   const ArabicText(
     this.text, {
     super.key,
-    this.fontSize = 24.0,
-    this.fontWeight = FontWeight.normal,
+    this.fontSize = 25.0,
+    this.fontWeight = FontWeight.w600,
     this.color,
     this.textAlign = TextAlign.right,
     this.isSelectable = false,
@@ -21,11 +24,15 @@ class ArabicText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final defaultColor = color ??
+        (isDark ? AppColors.darkTextPrimary : const Color(0xFF1F1514));
+
     final style = GoogleFonts.amiri(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      height: 2.1, // Sufficient line height to avoid clipping diacritics / tashkeel
-      color: color ?? Theme.of(context).colorScheme.onSurface,
+      height: 2.15, // Essential multiplier to completely avoid clipping diacritics
+      color: defaultColor,
     );
 
     if (isSelectable) {

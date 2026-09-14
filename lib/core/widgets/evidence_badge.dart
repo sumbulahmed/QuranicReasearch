@@ -3,6 +3,7 @@ import '../models/evidence_level.dart';
 import '../constants/app_typography.dart';
 import '../constants/app_dimensions.dart';
 
+/// Refined scholarly seal badge indicating the peer-reviewed evidence status.
 class EvidenceBadge extends StatelessWidget {
   final EvidenceLevel level;
   final bool compact;
@@ -22,15 +23,15 @@ class EvidenceBadge extends StatelessWidget {
 
     final badgeContent = Container(
       padding: EdgeInsets.symmetric(
-        horizontal: compact ? 8.0 : 12.0,
-        vertical: compact ? 4.0 : 6.0,
+        horizontal: compact ? 8.0 : 11.0,
+        vertical: compact ? 3.0 : 5.0,
       ),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: isDark ? 0.18 : 0.12),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
+        color: color.withValues(alpha: isDark ? 0.22 : 0.10),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
         border: Border.all(
-          color: color.withValues(alpha: isDark ? 0.45 : 0.35),
-          width: 1.0,
+          color: color.withValues(alpha: isDark ? 0.5 : 0.4),
+          width: 0.9,
         ),
       ),
       child: Row(
@@ -38,15 +39,17 @@ class EvidenceBadge extends StatelessWidget {
         children: [
           Icon(
             level.icon,
-            size: compact ? 14.0 : 16.0,
+            size: compact ? 13.0 : 15.0,
             color: color,
           ),
-          const SizedBox(width: 6.0),
+          const SizedBox(width: 5.0),
           Text(
             level.label,
             style: AppTypography.labelSmall.copyWith(
               color: color,
               fontWeight: FontWeight.w700,
+              fontSize: compact ? 10.5 : 11.5,
+              letterSpacing: 0.2,
             ),
           ),
         ],
@@ -56,7 +59,7 @@ class EvidenceBadge extends StatelessWidget {
     if (onTap != null) {
       return InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
         child: badgeContent,
       );
     }

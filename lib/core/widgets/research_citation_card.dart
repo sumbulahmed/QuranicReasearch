@@ -5,6 +5,7 @@ import '../constants/app_dimensions.dart';
 import '../constants/app_typography.dart';
 import 'app_card.dart';
 
+/// Vintage academic journal citation card presenting peer-reviewed literature.
 class ResearchCitationCard extends StatelessWidget {
   final String title;
   final List<String> authors;
@@ -58,15 +59,21 @@ class ResearchCitationCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(7.0),
                 decoration: BoxDecoration(
-                  color: AppColors.accentTeal.withValues(alpha: isDark ? 0.2 : 0.1),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                  color: (isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon)
+                      .withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+                  border: Border.all(
+                    color: (isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon)
+                        .withValues(alpha: 0.25),
+                    width: 0.8,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.menu_book_rounded,
-                  size: 20,
-                  color: AppColors.accentTeal,
+                child: Icon(
+                  Icons.auto_stories_rounded,
+                  size: 18,
+                  color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
                 ),
               ),
               const SizedBox(width: 12.0),
@@ -77,15 +84,17 @@ class ResearchCitationCard extends StatelessWidget {
                     Text(
                       title,
                       style: AppTypography.titleMedium.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16.5,
                       ),
                     ),
                     const SizedBox(height: 4.0),
                     Text(
                       authors.join(', '),
                       style: AppTypography.bodySmall.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        fontStyle: FontStyle.italic,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -98,19 +107,23 @@ class ResearchCitationCard extends StatelessWidget {
           const SizedBox(height: 12.0),
           Wrap(
             spacing: 8.0,
-            runSpacing: 4.0,
+            runSpacing: 5.0,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest,
+                  color: isDark ? AppColors.darkSurfaceSubtle : AppColors.parchmentSubtle,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.parchmentBorder,
+                    width: 0.8,
+                  ),
                 ),
                 child: Text(
-                  '$journal ($publicationYear)',
+                  '$journal • $publicationYear',
                   style: AppTypography.labelSmall.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
                 ),
               ),
@@ -120,17 +133,22 @@ class ResearchCitationCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.evidenceStrong.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+                    border: Border.all(
+                      color: AppColors.evidenceStrong.withValues(alpha: 0.35),
+                      width: 0.8,
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.check_circle_outline, size: 12, color: AppColors.evidenceStrong),
+                      const Icon(Icons.verified_outlined, size: 12, color: AppColors.evidenceStrong),
                       const SizedBox(width: 4),
                       Text(
-                        'Peer-Reviewed',
+                        'Peer-Reviewed Academic Study',
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.evidenceStrong,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 10.5,
                         ),
                       ),
                     ],
@@ -161,8 +179,8 @@ class ResearchCitationCard extends StatelessWidget {
             Text(
               abstractSummary!,
               style: AppTypography.bodyMedium.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
-                height: 1.5,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                height: 1.55,
               ),
             ),
           ],
@@ -176,19 +194,25 @@ class ResearchCitationCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
-                      Icons.open_in_new_rounded,
+                    Icon(
+                      Icons.menu_book_outlined,
                       size: 14,
-                      color: AppColors.accentCyan,
+                      color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
                     ),
                     const SizedBox(width: 6.0),
                     Text(
                       doi != null ? 'DOI: $doi' : 'View Source Publication',
                       style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.accentCyan,
-                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                        fontWeight: FontWeight.w700,
                         decoration: TextDecoration.underline,
                       ),
+                    ),
+                    const SizedBox(width: 4.0),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      size: 12,
+                      color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
                     ),
                   ],
                 ),
