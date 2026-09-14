@@ -19,6 +19,7 @@ import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/quran/presentation/ayah_detail_screen.dart';
 import '../../features/hadith/presentation/hadith_detail_screen.dart';
 import '../../features/research/presentation/research_screen.dart';
+import '../../features/education/presentation/sunnah_drinking_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -101,6 +102,11 @@ final appRouter = GoRouter(
       path: '/research',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const ResearchScreen(),
+    ),
+    GoRoute(
+      path: '/education/sunnah-drinking',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const SunnahDrinkingScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

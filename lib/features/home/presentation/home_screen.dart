@@ -74,6 +74,10 @@ class HomeScreen extends ConsumerWidget {
 
             // 2. Classical Compendium Quick Access
             _buildQuickAccessGrid(context, isDark),
+            const SizedBox(height: 20),
+
+            // 2b. Educational Spotlight: Sunnah of Drinking Water
+            _buildSunnahDrinkingSpotlightBanner(context, isDark),
             const SizedBox(height: 22),
 
             // 3. Daily Reflective Ayah
@@ -968,6 +972,131 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  Widget _buildSunnahDrinkingSpotlightBanner(BuildContext context, bool isDark) {
+    return InkWell(
+      onTap: () => context.push('/education/sunnah-drinking'),
+      borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isDark
+                ? [
+                    const Color(0xFF2B161B),
+                    const Color(0xFF1C222A),
+                  ]
+                : [
+                    AppColors.parchmentCard,
+                    AppColors.parchmentSubtle,
+                  ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+          border: Border.all(
+            color: isDark
+                ? AppColors.darkBorder
+                : AppColors.accentGold.withValues(alpha: 0.5),
+            width: 1.0,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.25)
+                  : const Color(0xFF6B5848).withValues(alpha: 0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: (isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon)
+                    .withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: (isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon)
+                      .withValues(alpha: 0.3),
+                  width: 1.0,
+                ),
+              ),
+              child: Icon(
+                Icons.water_drop_rounded,
+                size: 25,
+                color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: (isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon)
+                              .withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Text(
+                          'EDUCATIONAL SPOTLIGHT',
+                          style: AppTypography.labelSmall.copyWith(
+                            color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 9,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'سُنَّةُ الشُّرْبِ',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: isDark ? AppColors.accentGoldLight : AppColors.accentSepia,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'The Sunnah of Drinking Water',
+                    style: AppTypography.titleSmall.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? AppColors.darkTextHeading : AppColors.lightTextHeading,
+                      fontSize: 15,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Prophetic etiquette • Swallowing physiology & posture research',
+                    style: AppTypography.bodySmall.copyWith(
+                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                      fontSize: 11,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 14,
+              color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+            ),
+          ],
+        ),
       ),
     );
   }

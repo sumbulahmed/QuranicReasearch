@@ -21,6 +21,10 @@ import '../../features/user_library/data/repositories/mock_user_library_reposito
 import '../../features/user_library/domain/entities/bookmark.dart';
 import '../../features/user_library/domain/entities/personal_note.dart';
 
+import '../../features/education/domain/repositories/education_repository.dart';
+import '../../features/education/data/repositories/mock_education_repository.dart';
+import '../../features/education/domain/entities/sunnah_practice.dart';
+
 // App Settings & Preferences Providers
 final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
 final arabicFontSizeProvider = StateProvider<double>((ref) => 24.0);
@@ -42,6 +46,15 @@ final hadithRepositoryProvider = Provider<HadithRepository>((ref) {
 
 final userLibraryRepositoryProvider = Provider<UserLibraryRepository>((ref) {
   return MockUserLibraryRepository();
+});
+
+final educationRepositoryProvider = Provider<EducationRepository>((ref) {
+  return MockEducationRepository();
+});
+
+final sunnahDrinkingPracticeProvider = FutureProvider<SunnahPractice>((ref) async {
+  final repo = ref.watch(educationRepositoryProvider);
+  return repo.getSunnahDrinkingPractice();
 });
 
 // Science Providers
