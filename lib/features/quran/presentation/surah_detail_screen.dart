@@ -14,8 +14,6 @@ import '../../../core/widgets/evidence_badge.dart';
 import '../../../core/widgets/research_citation_card.dart';
 import '../../../core/widgets/translation_text.dart';
 import '../../user_library/domain/entities/bookmark.dart';
-import '../../../core/providers/app_providers.dart';
-import '../../user_library/domain/entities/bookmark.dart';
 
 class SurahDetailScreen extends ConsumerWidget {
   final int surahNumber;

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Centralized color palette embodying an old Islamic / literary manuscript,
 /// vintage research journal, and elegant classic book aesthetic.
@@ -33,16 +33,14 @@ abstract class AppColors {
   // Refined Scholarly Evidence Taxonomy (Muted Mineral & Earth Tones)
   static const Color evidenceStrong = Color(0xFF2E5E41);      // Forest sage / olive consensus
   static const Color evidenceEmerging = Color(0xFFB37324);    // Warm amber ochre
-<<<<<<< Updated upstream
   static const Color evidenceModerate = Color(0xFFB37324);    // Backward compatible alias
-=======
->>>>>>> Stashed changes
   static const Color evidencePossible = Color(0xFF3D6076);    // Muted slate indigo
   static const Color evidenceUnsupported = Color(0xFF9A3838); // Terracotta crimson
 
   // Light Theme (Warm Antique Parchment)
   static const Color lightBackground = parchment;
   static const Color lightSurface = parchmentCard;
+  static const Color lightSurfaceCard = parchmentCard;
   static const Color lightSurfaceSubtle = parchmentSubtle;
   static const Color lightBorder = parchmentBorder;
   static const Color lightBorderSubtle = parchmentBorderSubtle;
@@ -54,6 +52,7 @@ abstract class AppColors {
   // Dark Theme (Aged Leather & Midnight Parchment)
   static const Color darkBackground = Color(0xFF191514);
   static const Color darkSurface = Color(0xFF231E1C);
+  static const Color darkSurfaceCard = Color(0xFF231E1C);
   static const Color darkSurfaceSubtle = Color(0xFF2D2724);
   static const Color darkBorder = Color(0xFF403631);
   static const Color darkBorderSubtle = Color(0xFF332B27);

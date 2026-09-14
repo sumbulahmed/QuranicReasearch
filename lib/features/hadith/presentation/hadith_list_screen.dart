@@ -36,7 +36,7 @@ class HadithListScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final hadithsAsync = ref.watch(collectionHadithsProvider(collectionKey));
     final bookmarks = ref.watch(bookmarksProvider).value ?? [];
     final arabicFontSize = ref.watch(arabicFontSizeProvider);
