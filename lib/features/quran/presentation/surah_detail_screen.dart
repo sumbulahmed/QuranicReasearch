@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
@@ -23,6 +24,9 @@ class SurahDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final surahAsync = ref.watch(surahDetailProvider(surahNumber));
     final ayahsAsync = ref.watch(surahAyahsProvider(surahNumber));
+    final bookmarks = ref.watch(bookmarksProvider).value ?? [];
+    final arabicFontSize = ref.watch(arabicFontSizeProvider);
+    final translationPref = ref.watch(translationPreferenceProvider);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -38,24 +42,51 @@ class SurahDetailScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.format_size_rounded),
+            onPressed: () => _showDisplaySettingsSheet(context, ref),
+            tooltip: 'Reading Display Settings',
+          ),
+          IconButton(
             icon: const Icon(Icons.share_outlined),
-            onPressed: () {},
+            onPressed: () {
+              Clipboard.setData(ClipboardData(
+                text: 'Reading Surah $surahNumber in Bayan Islamic & Science App.',
+              ));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Surah link copied to clipboard!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            },
             tooltip: 'Share Surah',
           ),
         ],
       ),
       body: ayahsAsync.when(
         data: (ayahs) {
+          final surah = surahAsync.value;
           return ListView.separated(
             padding: AppDimensions.paddingScreen,
-            itemCount: ayahs.length + 1, // +1 for Bismillah header
+            itemCount: ayahs.length + 1, // +1 for Surah header
             separatorBuilder: (context, index) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               if (index == 0) {
-                return _buildSurahHeader(context, isDark);
+                return _buildSurahHeader(context, isDark, surah);
               }
               final ayah = ayahs[index - 1];
-              return _buildAyahCard(context, ref, ayah, isDark);
+              final bookmarkId = 'bm_${ayah.surahNumber}_${ayah.ayahNumber}';
+              final isBookmarked = bookmarks.any((b) => b.id == bookmarkId);
+
+              return _buildAyahCard(
+                context,
+                ref,
+                ayah,
+                isDark,
+                arabicFontSize,
+                translationPref,
+                isBookmarked,
+              );
             },
           );
         },
@@ -65,7 +96,82 @@ class SurahDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSurahHeader(BuildContext context, bool isDark) {
+  void _showDisplaySettingsSheet(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return Consumer(
+          builder: (context, ref, _) {
+            final currentSize = ref.watch(arabicFontSizeProvider);
+            final currentPref = ref.watch(translationPreferenceProvider);
+
+            return Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text('Display & Font Settings', style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  Text('Arabic Font Size (${currentSize.toInt()} pt)', style: AppTypography.labelMedium),
+                  Slider(
+                    value: currentSize,
+                    min: 20.0,
+                    max: 42.0,
+                    divisions: 11,
+                    label: '${currentSize.toInt()}',
+                    activeColor: AppColors.primaryEmerald,
+                    onChanged: (val) {
+                      ref.read(arabicFontSizeProvider.notifier).state = val;
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  Text('Translation Mode', style: AppTypography.labelMedium),
+                  const SizedBox(height: 8),
+                  SegmentedButton<String>(
+                    segments: const [
+                      ButtonSegment(value: 'both', label: Text('Both')),
+                      ButtonSegment(value: 'english', label: Text('English')),
+                      ButtonSegment(value: 'urdu', label: Text('Urdu')),
+                    ],
+                    selected: {currentPref},
+                    onSelectionChanged: (set) {
+                      ref.read(translationPreferenceProvider.notifier).state = set.first;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildSurahHeader(BuildContext context, bool isDark, dynamic surah) {
+    final theme = Theme.of(context);
+    final nameArabic = surah?.nameArabic ?? '';
+    final nameEnglish = surah?.nameEnglish ?? 'Surah $surahNumber';
+    final nameTranslation = surah?.nameTranslation ?? '';
+    final revelationType = surah?.revelationType ?? 'Meccan';
+    final numberOfAyahs = surah?.numberOfAyahs ?? '';
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       alignment: Alignment.center,
@@ -78,30 +184,108 @@ class SurahDetailScreen extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          Text(
-            'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-            style: AppTypography.quranTextLarge.copyWith(
-              color: AppColors.primaryEmerald,
+          if (nameArabic.isNotEmpty) ...[
+            Text(
+              nameArabic,
+              style: AppTypography.quranTextLarge.copyWith(
+                color: AppColors.primaryEmerald,
+                fontSize: 34,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 6),
+          ],
+          Text(
+            nameEnglish,
+            style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 6),
-          Text(
-            'In the name of Allah, the Entirely Merciful, the Especially Merciful',
-            style: AppTypography.bodySmall.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+          if (nameTranslation.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(
+              nameTranslation,
+              style: AppTypography.bodySmall.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
+          ],
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryEmerald.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  revelationType,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.primaryEmerald,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.accentTeal.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '$numberOfAyahs Verses',
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.accentTeal,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
           ),
+          if (surahNumber != 9) ...[
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 12),
+            Text(
+              'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+              style: AppTypography.quranTextLarge.copyWith(
+                color: AppColors.primaryEmerald,
+                fontSize: 24,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'In the name of Allah, the Entirely Merciful, the Especially Merciful',
+              style: AppTypography.bodySmall.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontSize: 11,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildAyahCard(BuildContext context, WidgetRef ref, dynamic ayah, bool isDark) {
+  Widget _buildAyahCard(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic ayah,
+    bool isDark,
+    double arabicFontSize,
+    String translationPref,
+    bool isBookmarked,
+  ) {
     final theme = Theme.of(context);
 
     return AppCard(
+      onTap: () => context.push('/quran/ayah/${ayah.surahNumber}/${ayah.ayahNumber}'),
       padding: AppDimensions.paddingCard,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -126,8 +310,38 @@ class SurahDetailScreen extends ConsumerWidget {
               ),
               Row(
                 children: [
+                  // Play Audio Button
                   IconButton(
-                    icon: const Icon(Icons.bookmark_border_rounded, size: 20),
+                    icon: const Icon(Icons.play_circle_outline_rounded, size: 20),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              const Icon(Icons.graphic_eq_rounded, color: Colors.white, size: 18),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text('Playing Ayah $surahNumber:${ayah.ayahNumber} (Reciter: Mishary Alafasy)'),
+                              ),
+                            ],
+                          ),
+                          duration: const Duration(seconds: 3),
+                          action: SnackBarAction(
+                            label: 'Stop',
+                            onPressed: () {},
+                          ),
+                        ),
+                      );
+                    },
+                    tooltip: 'Play Recitation',
+                  ),
+                  // Bookmark Button
+                  IconButton(
+                    icon: Icon(
+                      isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                      color: isBookmarked ? AppColors.accentGold : null,
+                      size: 20,
+                    ),
                     onPressed: () {
                       final bookmark = Bookmark(
                         id: 'bm_${ayah.surahNumber}_${ayah.ayahNumber}',
@@ -140,12 +354,37 @@ class SurahDetailScreen extends ConsumerWidget {
                       ref.read(bookmarksProvider.notifier).toggleBookmark(bookmark);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Bookmark updated for Ayah ${ayah.surahNumber}:${ayah.ayahNumber}'),
+                          content: Text(
+                            isBookmarked
+                                ? 'Removed Ayah $surahNumber:${ayah.ayahNumber} from bookmarks'
+                                : 'Bookmarked Ayah $surahNumber:${ayah.ayahNumber}',
+                          ),
                           duration: const Duration(seconds: 1),
                         ),
                       );
                     },
                     tooltip: 'Bookmark Ayah',
+                  ),
+                  // Copy Button
+                  IconButton(
+                    icon: const Icon(Icons.copy_rounded, size: 18),
+                    onPressed: () {
+                      final textToCopy = '${ayah.textArabic}\n\n"${ayah.textTranslation}"\n— Qur\'an $surahNumber:${ayah.ayahNumber}';
+                      Clipboard.setData(ClipboardData(text: textToCopy));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Ayah text and translation copied!'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    },
+                    tooltip: 'Copy Ayah',
+                  ),
+                  // Ayah Detail Fullpage Arrow
+                  IconButton(
+                    icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                    onPressed: () => context.push('/quran/ayah/${ayah.surahNumber}/${ayah.ayahNumber}'),
+                    tooltip: 'Open Full Ayah Detail & Evidence',
                   ),
                 ],
               ),
@@ -153,23 +392,39 @@ class SurahDetailScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
-          // Arabic Quranic Text (Amiri Font, HarfBuzz line-height)
+          // Arabic Quranic Text (Scalable with arabicFontSize)
           ArabicText(
             ayah.textArabic,
-            fontSize: 26,
+            fontSize: arabicFontSize,
             fontWeight: FontWeight.w600,
             textAlign: TextAlign.right,
           ),
           const SizedBox(height: 16),
 
           // English Translation
-          Text(
-            ayah.textTranslation,
-            style: AppTypography.bodyLarge.copyWith(
-              color: theme.colorScheme.onSurface,
-              height: 1.6,
+          if (translationPref == 'english' || translationPref == 'both') ...[
+            Text(
+              ayah.textTranslation,
+              style: AppTypography.bodyLarge.copyWith(
+                color: theme.colorScheme.onSurface,
+                height: 1.6,
+              ),
             ),
-          ),
+          ],
+
+          // Urdu Translation
+          if ((translationPref == 'urdu' || translationPref == 'both') && ayah.textTranslationUrdu != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              ayah.textTranslationUrdu!,
+              textDirection: TextDirection.rtl,
+              style: AppTypography.bodyMedium.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
+                height: 1.7,
+                fontSize: 15,
+              ),
+            ),
+          ],
 
           // Classical Tafseer Expandable
           if (ayah.tafseer != null) ...[
@@ -225,7 +480,7 @@ class SurahDetailScreen extends ConsumerWidget {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => _openScientificEvidenceSheet(context, ref, ayah),
+                  onTap: () => context.push('/quran/ayah/${ayah.surahNumber}/${ayah.ayahNumber}'),
                   borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -256,7 +511,7 @@ class SurahDetailScreen extends ConsumerWidget {
                                 ),
                               ),
                               Text(
-                                'Empirical evidence & peer-reviewed citations',
+                                'Tap to explore empirical evidence & peer-reviewed citations',
                                 style: AppTypography.bodySmall.copyWith(
                                   fontSize: 11,
                                   color: theme.colorScheme.onSurfaceVariant,

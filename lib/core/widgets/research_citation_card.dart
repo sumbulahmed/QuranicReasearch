@@ -15,17 +15,25 @@ class ResearchCitationCard extends StatelessWidget {
   final String? abstractSummary;
   final bool isPeerReviewed;
 
-  const ResearchCitationCard({
+  ResearchCitationCard({
     super.key,
-    required this.title,
-    required this.authors,
-    required this.journal,
-    required this.publicationYear,
-    this.doi,
-    this.url,
-    this.abstractSummary,
-    this.isPeerReviewed = true,
-  });
+    dynamic paper,
+    String? title,
+    List<String>? authors,
+    String? journal,
+    int? publicationYear,
+    String? doi,
+    String? url,
+    String? abstractSummary,
+    bool? isPeerReviewed,
+  })  : title = paper != null ? paper.title as String : (title ?? ''),
+        authors = paper != null ? (paper.authors as List<dynamic>).cast<String>() : (authors ?? const []),
+        journal = paper != null ? paper.journal as String : (journal ?? ''),
+        publicationYear = paper != null ? paper.publicationYear as int : (publicationYear ?? 2020),
+        doi = paper != null ? paper.doi as String? : doi,
+        url = paper != null ? paper.sourceUrl as String? : url,
+        abstractSummary = paper != null ? paper.abstractSummary as String? : abstractSummary,
+        isPeerReviewed = paper != null ? (paper.isPeerReviewed as bool? ?? true) : (isPeerReviewed ?? true);
 
   Future<void> _launchUrl(String targetUrl) async {
     final uri = Uri.tryParse(targetUrl);
@@ -128,6 +136,24 @@ class ResearchCitationCard extends StatelessWidget {
                     ],
                   ),
                 ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0),
+                decoration: BoxDecoration(
+                  color: AppColors.accentGold.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+                  border: Border.all(
+                    color: AppColors.accentGold.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Text(
+                  'DEMO RECORD',
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.accentGold,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 9,
+                  ),
+                ),
+              ),
             ],
           ),
           if (abstractSummary != null && abstractSummary!.isNotEmpty) ...[
