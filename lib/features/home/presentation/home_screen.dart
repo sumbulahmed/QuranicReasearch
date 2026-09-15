@@ -347,53 +347,59 @@ class HomeScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.primaryMaroonDark
-                          : AppColors.parchmentSubtle,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
                         color: isDark
-                            ? AppColors.darkBorder
-                            : AppColors.primaryMaroon.withValues(alpha: 0.25),
-                        width: 0.8,
+                            ? AppColors.primaryMaroonDark
+                            : AppColors.parchmentSubtle,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.primaryMaroon.withValues(alpha: 0.25),
+                          width: 0.8,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.menu_book_rounded,
+                            size: 12,
+                            color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'DAILY REFLECTION',
+                            style: AppTypography.labelSmall.copyWith(
+                              color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 9.5,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.menu_book_rounded,
-                          size: 12,
-                          color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        'Surah Al-Mu\'minun 23:14',
+                        style: AppTypography.bodySmall.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'DAILY REFLECTION',
-                          style: AppTypography.labelSmall.copyWith(
-                            color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 9.5,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Surah Al-Mu\'minun 23:14',
-                    style: AppTypography.bodySmall.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               const EvidenceBadge(level: EvidenceLevel.strong, compact: true),
             ],
           ),
@@ -425,10 +431,14 @@ class HomeScreen extends ConsumerWidget {
           const CustomDivider(verticalPadding: 4),
           const SizedBox(height: 4),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 4,
             children: [
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     icon: Icon(
@@ -1039,7 +1049,10 @@ class HomeScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 6,
+                    runSpacing: 4,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -1058,7 +1071,6 @@ class HomeScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 6),
                       Text(
                         'سُنَّةُ الشُّرْبِ',
                         style: AppTypography.labelSmall.copyWith(
