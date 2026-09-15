@@ -20,6 +20,10 @@ import '../../features/quran/presentation/ayah_detail_screen.dart';
 import '../../features/hadith/presentation/hadith_detail_screen.dart';
 import '../../features/research/presentation/research_screen.dart';
 import '../../features/education/presentation/sunnah_drinking_screen.dart';
+import '../../features/sunnah/presentation/screens/sunnah_home_screen.dart';
+import '../../features/sunnah/presentation/screens/sunnah_list_screen.dart';
+import '../../features/sunnah/presentation/screens/sunnah_detail_screen.dart';
+import '../../features/sunnah/presentation/screens/sunnah_video_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -108,6 +112,35 @@ final appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const SunnahDrinkingScreen(),
     ),
+    GoRoute(
+      path: '/sunnah/category/:categoryId',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final categoryId = state.pathParameters['categoryId'] ?? 'All';
+        return SunnahListScreen(category: categoryId);
+      },
+    ),
+    GoRoute(
+      path: '/sunnah/drinking-water',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const SunnahDetailScreen(sunnahId: 'drinking-water'),
+    ),
+    GoRoute(
+      path: '/sunnah/:sunnahId/video',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final sunnahId = state.pathParameters['sunnahId'] ?? 'drinking-water';
+        return SunnahVideoScreen(sunnahId: sunnahId);
+      },
+    ),
+    GoRoute(
+      path: '/sunnah/:sunnahId',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final sunnahId = state.pathParameters['sunnahId'] ?? 'drinking-water';
+        return SunnahDetailScreen(sunnahId: sunnahId);
+      },
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return MainShellScreen(navigationShell: navigationShell);
@@ -134,6 +167,14 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/hadith',
               builder: (context, state) => const HadithCollectionsScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/sunnah',
+              builder: (context, state) => const SunnahHomeScreen(),
             ),
           ],
         ),

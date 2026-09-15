@@ -57,6 +57,11 @@ class MainShellScreen extends StatelessWidget {
               label: 'Hadith',
             ),
             NavigationDestination(
+              icon: const Icon(Icons.auto_awesome_outlined),
+              selectedIcon: Icon(Icons.auto_awesome_rounded, color: selectedColor),
+              label: 'Sunnah',
+            ),
+            NavigationDestination(
               icon: const Icon(Icons.science_outlined),
               selectedIcon: Icon(Icons.science_rounded, color: selectedColor),
               label: 'Science',
