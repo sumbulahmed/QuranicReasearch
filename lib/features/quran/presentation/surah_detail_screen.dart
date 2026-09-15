@@ -308,7 +308,7 @@ class SurahDetailScreen extends ConsumerWidget {
             Text(
               'In the name of Allah, the Entirely Merciful, the Especially Merciful',
               style: AppTypography.bodySmall.copyWith(
-                color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
                 fontSize: 11,
               ),
               textAlign: TextAlign.center,
@@ -447,7 +447,7 @@ class SurahDetailScreen extends ConsumerWidget {
               ayah.textTranslationUrdu!,
               textDirection: TextDirection.rtl,
               style: AppTypography.bodySmall.copyWith(
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
                 fontSize: 14.5,
               ),
             ),

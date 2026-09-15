@@ -241,7 +241,10 @@ class AyahDetailScreen extends ConsumerWidget {
                         const SizedBox(height: 10),
                         Text(
                           ayah.textTranslation,
-                          style: AppTypography.bodyLarge.copyWith(height: 1.6),
+                          style: AppTypography.bodyLarge.copyWith(
+                            height: 1.6,
+                            color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
+                          ),
                         ),
                       ],
                     ),
@@ -276,6 +279,7 @@ class AyahDetailScreen extends ConsumerWidget {
                           style: AppTypography.bodyLarge.copyWith(
                             height: 1.8,
                             fontSize: 16,
+                            color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
                           ),
                         ),
                       ],

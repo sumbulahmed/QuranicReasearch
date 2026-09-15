@@ -389,7 +389,7 @@ class _SunnahDrinkingScreenState extends ConsumerState<SunnahDrinkingScreen> {
           Text(
             hadith.textEnglish,
             style: AppTypography.hadithMatnEnglish.copyWith(
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
+              color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -468,7 +468,7 @@ class _SunnahDrinkingScreenState extends ConsumerState<SunnahDrinkingScreen> {
           Text(
             hadith.textEnglish,
             style: AppTypography.hadithMatnEnglish.copyWith(
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
+              color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
             ),
           ),
           const SizedBox(height: 8),
@@ -538,7 +538,7 @@ class _SunnahDrinkingScreenState extends ConsumerState<SunnahDrinkingScreen> {
           Text(
             hadith.textEnglish,
             style: AppTypography.hadithMatnEnglish.copyWith(
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
+              color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
               fontWeight: FontWeight.w600,
             ),
           ),

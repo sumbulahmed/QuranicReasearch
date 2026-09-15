@@ -25,7 +25,7 @@ class TranslationText extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final defaultColor = color ??
-        (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary);
+        (isDark ? AppColors.translationTextDark : AppColors.translationTextLight);
 
     return Text(
       text,

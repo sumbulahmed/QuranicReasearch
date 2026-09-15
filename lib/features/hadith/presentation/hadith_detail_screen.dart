@@ -275,7 +275,10 @@ class HadithDetailScreen extends ConsumerWidget {
                         const SizedBox(height: 10),
                         Text(
                           hadith.textTranslation,
-                          style: AppTypography.bodyLarge.copyWith(height: 1.6),
+                          style: AppTypography.bodyLarge.copyWith(
+                            height: 1.6,
+                            color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
+                          ),
                         ),
                       ],
                     ),
@@ -311,6 +314,7 @@ class HadithDetailScreen extends ConsumerWidget {
                           style: AppTypography.bodyLarge.copyWith(
                             height: 1.8,
                             fontSize: 16,
+                            color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
                           ),
                         ),
                       ],
