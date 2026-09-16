@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 /// Centralized color palette embodying an old Islamic / literary manuscript,
 /// vintage research journal, and elegant classic book aesthetic.
@@ -49,8 +49,8 @@ abstract class AppColors {
   static const Color lightTextSecondary = Color(0xFF5C4E48);   // Dark brown body text
   static const Color lightTextMuted = Color(0xFF8A7A71);       // Muted warm taupe
 
-  // Translation text — full black in light mode for maximum readability
-  static const Color translationTextLight = Color(0xFF0A0A0A);  // Near-black for translations
+  // Translation text — pure black in light mode for maximum readability
+  static const Color translationTextLight = Colors.black;
   static const Color translationTextDark = Color(0xFFF4EDE2);   // Antique cream for dark mode
 
   // Dark Theme (Aged Leather & Midnight Parchment)

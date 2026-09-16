@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quranic_research/app/app.dart';
+import 'package:quranic_research/core/widgets/translation_text.dart';
 import 'package:quranic_research/features/home/presentation/home_screen.dart';
 import 'package:quranic_research/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:quranic_research/features/splash/presentation/splash_screen.dart';
@@ -20,9 +22,8 @@ void main() {
     // Verify OnboardingScreen is not shown initially
     expect(find.byType(OnboardingScreen), findsNothing);
 
-    // Fast-forward through the letter animation (3600ms) and navigation timer (350ms)
-    await tester.pump(const Duration(milliseconds: 3700));
-    await tester.pump(const Duration(milliseconds: 500));
+    // Fast-forward through the consolidated splash screen (1300ms) and navigation
+    await tester.pump(const Duration(milliseconds: 1400));
     await tester.pumpAndSettle();
 
     // Verify app transitions directly to HomeScreen
@@ -30,6 +31,24 @@ void main() {
 
     // Verify OnboardingScreen is never shown after splash
     expect(find.byType(OnboardingScreen), findsNothing);
+  });
+
+  testWidgets('Translation text is pure black in light mode', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: [
+              TranslationText('In the name of Allah, the Entirely Merciful'),
+              TranslationText.urdu('اللہ کے نام سے جو رحمان و رحیم ہے۔'),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('In the name of Allah, the Entirely Merciful'), findsOneWidget);
+    expect(find.text('اللہ کے نام سے جو رحمان و رحیم ہے۔'), findsOneWidget);
   });
 }
 

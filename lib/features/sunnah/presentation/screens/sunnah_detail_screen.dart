@@ -276,7 +276,7 @@ class _SunnahDetailScreenState extends ConsumerState<SunnahDetailScreen> {
                 Text(
                   hadith.englishTranslation,
                   style: AppTypography.hadithMatnEnglish.copyWith(
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
+                    color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

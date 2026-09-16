@@ -420,12 +420,8 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 6),
 
           // Urdu Translation
-          Text(
+          TranslationText.urdu(
             'پھر ہم نے نطفہ کو جما ہوا خون بنایا، پھر لوتھڑا، پھر ہڈیاں، پھر ہڈیوں پر گوشت چڑھایا...',
-            style: AppTypography.bodySmall.copyWith(
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-            ),
-            textDirection: TextDirection.rtl,
           ),
           const SizedBox(height: 12),
           const CustomDivider(verticalPadding: 4),

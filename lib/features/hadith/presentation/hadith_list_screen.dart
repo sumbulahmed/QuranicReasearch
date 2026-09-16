@@ -204,14 +204,7 @@ class HadithListScreen extends ConsumerWidget {
                       // Urdu Translation
                       if ((translationPref == 'urdu' || translationPref == 'both') &&
                           hadith.textTranslationUrdu != null) ...[
-                        Text(
-                          hadith.textTranslationUrdu!,
-                          textDirection: TextDirection.rtl,
-                          style: AppTypography.bodySmall.copyWith(
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                            fontSize: 14.5,
-                          ),
-                        ),
+                        TranslationText.urdu(hadith.textTranslationUrdu!),
                         const SizedBox(height: 8),
                       ],
 

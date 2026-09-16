@@ -443,14 +443,7 @@ class SurahDetailScreen extends ConsumerWidget {
           ],
           if ((translationPref == 'urdu' || translationPref == 'both') && ayah.textTranslationUrdu != null) ...[
             const SizedBox(height: 8),
-            Text(
-              ayah.textTranslationUrdu!,
-              textDirection: TextDirection.rtl,
-              style: AppTypography.bodySmall.copyWith(
-                color: isDark ? AppColors.translationTextDark : AppColors.translationTextLight,
-                fontSize: 14.5,
-              ),
-            ),
+            TranslationText.urdu(ayah.textTranslationUrdu!),
           ],
 
           // 4. CLASSICAL TAFSEER

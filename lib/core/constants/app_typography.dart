@@ -102,6 +102,18 @@ abstract class AppTypography {
       );
 
   // Dedicated Academic & Scriptural Styles
+  static TextStyle get translationEnglish => GoogleFonts.ebGaramond(
+        fontSize: 16.5,
+        fontWeight: FontWeight.w400,
+        height: 1.65,
+      );
+
+  static TextStyle get translationUrdu => GoogleFonts.amiri(
+        fontSize: 16.5,
+        fontWeight: FontWeight.normal,
+        height: 1.85,
+      );
+
   static TextStyle get hadithMatnEnglish => GoogleFonts.ebGaramond(
         fontSize: 16,
         fontWeight: FontWeight.w400,
