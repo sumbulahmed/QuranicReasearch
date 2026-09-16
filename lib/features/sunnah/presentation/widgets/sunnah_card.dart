@@ -40,66 +40,74 @@ class SunnahCard extends ConsumerWidget {
         children: [
           // Header: Category Tag, Science Badge, and Bookmark Button
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkSurfaceSubtle
-                      : AppColors.parchmentSubtle,
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                    color: isDark
-                        ? AppColors.darkBorder
-                        : AppColors.primaryMaroon.withValues(alpha: 0.2),
-                    width: 0.8,
-                  ),
-                ),
-                child: Text(
-                  practice.category,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: isDark
-                        ? AppColors.accentGoldLight
-                        : AppColors.primaryMaroon,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 10.5,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              if (practice.hasScience) ...[
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: AppColors.evidenceModerate.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(
-                      color: AppColors.evidenceModerate.withValues(alpha: 0.4),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.science_rounded,
-                        size: 11,
-                        color: AppColors.evidenceModerate,
-                      ),
-                      const SizedBox(width: 3.5),
-                      Text(
-                        'Science Insights',
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.evidenceModerate,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 10,
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? AppColors.darkSurfaceSubtle
+                            : AppColors.parchmentSubtle,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.primaryMaroon.withValues(alpha: 0.2),
+                          width: 0.8,
                         ),
                       ),
-                    ],
-                  ),
+                      child: Text(
+                        practice.category,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: isDark
+                              ? AppColors.accentGoldLight
+                              : AppColors.primaryMaroon,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 10.5,
+                        ),
+                      ),
+                    ),
+                    if (practice.hasScience)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: AppColors.evidenceModerate.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: AppColors.evidenceModerate.withValues(alpha: 0.4),
+                            width: 0.8,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.science_rounded,
+                              size: 11,
+                              color: AppColors.evidenceModerate,
+                            ),
+                            const SizedBox(width: 3.5),
+                            Text(
+                              'Science Insights',
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.evidenceModerate,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
-              ],
-              const Spacer(),
+              ),
+              const SizedBox(width: 4),
               IconButton(
                 icon: Icon(
                   isBookmarked
@@ -182,17 +190,21 @@ class SunnahCard extends ConsumerWidget {
                       : AppColors.accentSepia,
                 ),
                 const SizedBox(width: 5),
-                Text(
-                  '${practice.hadithReferences.first.collection} ${practice.hadithReferences.first.hadithNumber}',
-                  style: AppTypography.labelSmall.copyWith(
-                    color: isDark
-                        ? AppColors.accentGoldLight
-                        : AppColors.accentSepia,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 11,
+                Expanded(
+                  child: Text(
+                    '${practice.hadithReferences.first.collection} ${practice.hadithReferences.first.hadithNumber}',
+                    style: AppTypography.labelSmall.copyWith(
+                      color: isDark
+                          ? AppColors.accentGoldLight
+                          : AppColors.accentSepia,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 11,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 6),
                 Icon(
                   Icons.arrow_forward_rounded,
                   size: 14,

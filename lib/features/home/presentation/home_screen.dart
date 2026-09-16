@@ -46,6 +46,8 @@ class HomeScreen extends ConsumerWidget {
                 color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
                 fontSize: 11,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -344,62 +346,61 @@ class HomeScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
             children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AppColors.primaryMaroonDark
+                          : AppColors.parchmentSubtle,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
                         color: isDark
-                            ? AppColors.primaryMaroonDark
-                            : AppColors.parchmentSubtle,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(
-                          color: isDark
-                              ? AppColors.darkBorder
-                              : AppColors.primaryMaroon.withValues(alpha: 0.25),
-                          width: 0.8,
-                        ),
+                            ? AppColors.darkBorder
+                            : AppColors.primaryMaroon.withValues(alpha: 0.25),
+                        width: 0.8,
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.menu_book_rounded,
-                            size: 12,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.menu_book_rounded,
+                          size: 12,
+                          color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'DAILY REFLECTION',
+                          style: AppTypography.labelSmall.copyWith(
                             color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 9.5,
+                            letterSpacing: 0.5,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'DAILY REFLECTION',
-                            style: AppTypography.labelSmall.copyWith(
-                              color: isDark ? AppColors.accentGoldLight : AppColors.primaryMaroon,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 9.5,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Flexible(
-                      child: Text(
-                        'Surah Al-Mu\'minun 23:14',
-                        style: AppTypography.bodySmall.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    'Surah Al-Mu\'minun 23:14',
+                    style: AppTypography.bodySmall.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextHeading,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
               const EvidenceBadge(level: EvidenceLevel.strong, compact: true),
             ],
           ),
@@ -497,8 +498,11 @@ class HomeScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -573,10 +577,14 @@ class HomeScreen extends ConsumerWidget {
             '"Fasting is a protective shield. So when one of you is fasting, he should neither indulge in foul language nor act foolishly..."',
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
             children: [
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     Icons.science_outlined,
@@ -584,11 +592,14 @@ class HomeScreen extends ConsumerWidget {
                     color: isDark ? AppColors.accentGoldLight : AppColors.evidenceStrong,
                   ),
                   const SizedBox(width: 4),
-                  Text(
-                    'Autophagy & Neuroplasticity',
-                    style: AppTypography.labelSmall.copyWith(
-                      color: isDark ? AppColors.accentGoldLight : AppColors.evidenceStrong,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      'Autophagy & Neuroplasticity',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: isDark ? AppColors.accentGoldLight : AppColors.evidenceStrong,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -632,8 +643,11 @@ class HomeScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -865,8 +879,11 @@ class HomeScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 8,
+                          runSpacing: 4,
                           children: [
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
@@ -959,12 +976,14 @@ class HomeScreen extends ConsumerWidget {
                 size: 20,
               ),
               const SizedBox(width: 8),
-              Text(
-                'Epistemic & Scholarly Integrity',
-                style: AppTypography.titleMedium.copyWith(
-                  color: AppColors.evidenceStrong,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
+              Expanded(
+                child: Text(
+                  'Epistemic & Scholarly Integrity',
+                  style: AppTypography.titleMedium.copyWith(
+                    color: AppColors.evidenceStrong,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],

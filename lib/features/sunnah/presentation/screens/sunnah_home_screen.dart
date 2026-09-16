@@ -60,6 +60,8 @@ class _SunnahHomeScreenState extends ConsumerState<SunnahHomeScreen> {
                 color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
                 fontSize: 11,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -196,22 +198,18 @@ class _SunnahHomeScreenState extends ConsumerState<SunnahHomeScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Filter Chips
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SectionHeader(
-                    title: selectedCategory == 'All' ? 'Curated Sunnahs' : selectedCategory,
-                    subtitle: 'Authentic Practices & Evidence Reviews',
-                  ),
-                  if (selectedCategory != 'All')
-                    TextButton(
-                      onPressed: () {
-                        ref.read(sunnahSelectedCategoryProvider.notifier).state = 'All';
-                      },
-                      child: const Text('Show All'),
-                    ),
-                ],
+              // Filter Section Header with Action
+              SectionHeader(
+                title: selectedCategory == 'All' ? 'Curated Sunnahs' : selectedCategory,
+                subtitle: 'Authentic Practices & Evidence Reviews',
+                trailing: selectedCategory != 'All'
+                    ? TextButton(
+                        onPressed: () {
+                          ref.read(sunnahSelectedCategoryProvider.notifier).state = 'All';
+                        },
+                        child: const Text('Show All'),
+                      )
+                    : null,
               ),
               const SizedBox(height: 10),
 

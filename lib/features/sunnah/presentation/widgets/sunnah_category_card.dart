@@ -61,17 +61,21 @@ class SunnahCategoryCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text(
-                      category.arabicName,
-                      style: AppTypography.bodySmall.copyWith(
-                        color: isDark
-                            ? AppColors.accentGoldLight
-                            : AppColors.accentSepia,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
+                    Flexible(
+                      child: Text(
+                        category.arabicName,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: isDark
+                              ? AppColors.accentGoldLight
+                              : AppColors.accentSepia,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: 4),
                     Text(
                       '• ${category.count}',
                       style: AppTypography.labelSmall.copyWith(
