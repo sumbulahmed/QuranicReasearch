@@ -22,8 +22,8 @@ void main() {
     // Verify OnboardingScreen is not shown initially
     expect(find.byType(OnboardingScreen), findsNothing);
 
-    // Fast-forward through the consolidated splash screen (1300ms) and navigation
-    await tester.pump(const Duration(milliseconds: 1400));
+    // Fast-forward through the vintage splash screen animation (3500ms) and navigation
+    await tester.pump(const Duration(milliseconds: 3600));
     await tester.pumpAndSettle();
 
     // Verify app transitions directly to HomeScreen
